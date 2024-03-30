@@ -35,7 +35,7 @@
         @include('layouts.sidebar')
       @endif
 
-      <div id="container" class="p-3">
+      <div id="container" class="p-3 {{ auth()->check() ? '' : 'ms-0' }}">
         @if (session('success'))
             @include('layouts.alert', [
                 'color' => 'success',
