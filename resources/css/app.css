@@ -1,0 +1,75 @@
+/* BS5 Floating Label */
+.form-floating input,
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection,
+.select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus {
+    box-shadow: none !important;
+}
+
+.form-floating input:focus,
+.select2-container--bootstrap-5 .select2-dropdown,
+.select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus,
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: #333333 !important;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-selected=true]:not(.select2-results__option--highlighted) {
+    background-color: #333333 !important;
+}
+
+.select2-container .select2-selection--multiple,
+.select2-container .select2-selection--single {
+    height: auto !important;
+    padding: 0 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-search {
+    width: auto !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+    margin-top: 0.375rem !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered,
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__placeholder,
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered .select2-selection__placeholder {
+    line-height: 1.25 !important;
+}
+
+.form-floating .select2-container .select2-selection--multiple .select2-selection__rendered,
+.form-floating .select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 1.625rem .75rem .625rem;
+}
+
+.form-floating>.form-select~label,
+.form-floating>.form-control~label {
+    z-index: 1;
+    opacity: .65;
+}
+
+.select2-container .select2-search--inline .select2-search__field,
+.select2-container--bootstrap5 .select2-selection--multiple .select2-selection__choice {
+    caret-color: transparent;
+    margin-top: -0.4em !important;
+    margin-left: 0.7em !important;
+}
+
+/* Badge list margin bottom */
+.last-margin-0 *:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Toogle icon collapse */
+[data-bs-toggle="collapse"]::after {
+    content: "\f078";
+    font-family: 'Font Awesome 6 Free';
+    margin-left: auto;
+}
+
+[data-bs-toggle="collapse"].collapsed::after {
+    content: "\f054";
+}
