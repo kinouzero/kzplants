@@ -1,4 +1,4 @@
-import './bootstrap';
+import './bootstrap.js';
 
 // JS
 import './dom.js';

@@ -8,8 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
   use HasFactory, Notifiable;
 
   /**
@@ -38,8 +37,7 @@ class User extends Authenticatable
    *
    * @return array<string, string>
    */
-  protected function casts(): array
-  {
+  protected function casts(): array {
     return [
       'email_verified_at' => 'datetime',
       'password' => 'hashed',
@@ -49,32 +47,28 @@ class User extends Authenticatable
   /**
    * Roles
    */
-  public function roles()
-  {
+  public function roles() {
     return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
   }
 
   /**
    * Preferences
    */
-  public function preferences()
-  {
+  public function preferences() {
     return $this->belongsToMany(Preference::class, 'user_preferences', 'user_id', 'preference_id')->withPivot('value');
   }
 
   /**
    * Check if the user is an admin
    */
-  public function isAdmin()
-  {
+  public function isAdmin() {
     return $this->roles()->where('name', 'admin')->exists();
   }
 
   /**
    * Get user timezone
    */
-  public static function getTimezone($user)
-  {
+  public static function getTimezone($user) {
     $preference = Preference::where('name', 'ilike', 'timezone')->first();
     return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.timezone');
   }
@@ -82,8 +76,7 @@ class User extends Authenticatable
   /**
    * Get user language
    */
-  public static function getLanguage($user)
-  {
+  public static function getLanguage($user) {
     $preference = Preference::where('name', 'ilike', 'language')->first();
     return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.locale');
   }
@@ -91,8 +84,7 @@ class User extends Authenticatable
   /**
    * Get user page length
    */
-  public static function getTableLength($user)
-  {
+  public static function getTableLength($user) {
     $preference = Preference::where('name', 'ilike', 'table%length')->first();
     return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : 25;
   }

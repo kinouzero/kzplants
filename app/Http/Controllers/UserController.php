@@ -8,39 +8,33 @@ use App\Models\Preference;
 use App\Models\Role;
 use App\Models\User;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
   // Views
-  public function index()
-  {
+  public function index() {
     $users = User::all();
     return view('user.index', compact('users'));
   }
 
-  public function create()
-  {
+  public function create() {
     $user = null;
     $roles = Role::all();
     return view('user.create', compact('user', 'roles'));
   }
 
-  public function edit($id)
-  {
+  public function edit($id) {
     $user        = User::findOrFail($id);
     $roles       = Role::all();
     $preferences = Preference::all();
     return view('user.edit', compact('user', 'roles', 'preferences'));
   }
 
-  public function detail($id)
-  {
+  public function detail($id) {
     $user = User::findOrFail($id);
     return view('user.detail', compact('user'));
   }
 
   // Actions
-  public function store(Request $request)
-  {
+  public function store(Request $request) {
     $user          = new User();
     $args          = $request->all();
     $validatedData = $request->validate(['name' => 'required|string']);
@@ -63,8 +57,7 @@ class UserController extends Controller
     return redirect()->route('user.edit', ['id' => $user->id])->with('success', 'User created successfully.');
   }
 
-  public function update(Request $request, $id)
-  {
+  public function update(Request $request, $id) {
     $user = User::findOrFail($id);
     $args = $request->all();
 
@@ -91,8 +84,7 @@ class UserController extends Controller
     return redirect()->route('user.index')->with('success', 'User updated successfully.');
   }
 
-  public function destroy($id)
-  {
+  public function destroy($id) {
     $user = User::findOrFail($id);
     $user->delete();
     return redirect()->route('user.index')->with('success', 'User deleted successfully.');

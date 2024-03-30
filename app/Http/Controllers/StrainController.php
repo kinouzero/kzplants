@@ -8,31 +8,26 @@ use Illuminate\Http\Request;
 use App\Models\Strain;
 use App\Models\Tag;
 
-class StrainController extends Controller
-{
+class StrainController extends Controller {
   // Views
-  public function index()
-  {
+  public function index() {
     $strains = Strain::all();
     return view('strain.index', compact('strains'));
   }
 
-  public function detail($id)
-  {
+  public function detail($id) {
     $strain = Strain::findOrFail($id);
     return view('strain.detail', compact('strain'));
   }
 
-  public function create()
-  {
+  public function create() {
     $strain     = null;
     $tags       = Tag::all();
     $properties = Property::all();
     return view('strain.create', compact('strain', 'tags', 'properties'));
   }
 
-  public function edit($id)
-  {
+  public function edit($id) {
     $strain     = Strain::findOrFail($id);
     $tags       = Tag::all();
     $properties = Property::all();
@@ -40,8 +35,7 @@ class StrainController extends Controller
   }
 
   // Actions
-  public function store(Request $request)
-  {
+  public function store(Request $request) {
     $strain        = new Strain();
     $args          = $request->all();
     $validatedData = $request->validate(['name' => 'required|string']);
@@ -64,8 +58,7 @@ class StrainController extends Controller
     return redirect()->route('strain.index')->with('success', 'Strain created successfully.');
   }
 
-  public function update(Request $request, $id)
-  {
+  public function update(Request $request, $id) {
     $strain = Strain::findOrFail($id);
     $args   = $request->all();
 
@@ -91,8 +84,7 @@ class StrainController extends Controller
     return redirect()->route('strain.index')->with('success', 'Strain updated successfully.');
   }
 
-  public function destroy($id)
-  {
+  public function destroy($id) {
     $strain = Strain::findOrFail($id);
     $strain->delete();
     return redirect()->route('strain.index')->with('success', 'Strain deleted successfully.');

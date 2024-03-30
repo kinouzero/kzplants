@@ -6,55 +6,47 @@ use Illuminate\Http\Request;
 
 use App\Models\Statut;
 
-class StatutController extends Controller
-{
-    // Views
-    public function index()
-    {
-        $status = Statut::all();
-        return view('statut.index', compact('status'));
-    }
+class StatutController extends Controller {
+  // Views
+  public function index() {
+    $status = Statut::all();
+    return view('statut.index', compact('status'));
+  }
 
-    public function create()
-    {
-        $statut = null;
-        return view('statut.create', compact('statut'));
-    }
+  public function create() {
+    $statut = null;
+    return view('statut.create', compact('statut'));
+  }
 
-    public function edit($id)
-    {
-        $statut = Statut::findOrFail($id);
-        return view('statut.edit', compact('statut'));
-    }
+  public function edit($id) {
+    $statut = Statut::findOrFail($id);
+    return view('statut.edit', compact('statut'));
+  }
 
-    public function detail($id)
-    {
-        $statut = Statut::findOrFail($id);
-        return view('statut.detail', compact('statut'));
-    }
+  public function detail($id) {
+    $statut = Statut::findOrFail($id);
+    return view('statut.detail', compact('statut'));
+  }
 
-    // Actions
-    public function store(Request $request)
-    {
-        $statut        = new Statut();
-        $validatedData = $request->validate(['name' => 'required|string']);
-        $statut->name  = $validatedData['name'];
-        $statut->save();
+  // Actions
+  public function store(Request $request) {
+    $statut        = new Statut();
+    $validatedData = $request->validate(['name' => 'required|string']);
+    $statut->name  = $validatedData['name'];
+    $statut->save();
 
-        return redirect()->route('statut.index')->with('success', 'Statut created successfully.');
-    }
+    return redirect()->route('statut.index')->with('success', 'Statut created successfully.');
+  }
 
-    public function update(Request $request, $id)
-    {
-        $statut = Statut::findOrFail($id);
-        $statut->update($request->all());
-        return redirect()->route('statut.index')->with('success', 'Statut updated successfully.');
-    }
+  public function update(Request $request, $id) {
+    $statut = Statut::findOrFail($id);
+    $statut->update($request->all());
+    return redirect()->route('statut.index')->with('success', 'Statut updated successfully.');
+  }
 
-    public function destroy($id)
-    {
-        $statut = Statut::findOrFail($id);
-        $statut->delete();
-        return redirect()->route('statut.index')->with('success', 'Statut deleted successfully.');
-    }
+  public function destroy($id) {
+    $statut = Statut::findOrFail($id);
+    $statut->delete();
+    return redirect()->route('statut.index')->with('success', 'Statut deleted successfully.');
+  }
 }

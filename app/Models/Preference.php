@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Preference extends Model
-{
+class Preference extends Model {
   use HasFactory;
 
   protected $table = 'preferences';
@@ -19,8 +18,7 @@ class Preference extends Model
   /**
    * Search
    */
-  public function search($search, $order = [], $limit = 25)
-  {
+  public function search($search, $order = [], $limit = 25) {
     $query = Property::query();
 
     // Where
