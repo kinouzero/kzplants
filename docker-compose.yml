@@ -3,10 +3,9 @@ services:
   app:
     build:
       context: .
+    environment:
+      - AUTORUN_ENABLED=true
     ports:
       - 80:80
-    environment:
-      - SSL_MODE=off
-      - AUTORUN_ENABLED=true
     volumes:
-      - .:/var/www/html
+      - .env:/var/www/html/.env
