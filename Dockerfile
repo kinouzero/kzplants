@@ -18,4 +18,4 @@ RUN rm -rf node_modules && npm i
 # Link node_modules directory in public directory
 RUN cd public && rm -rf npm && ln -s ../node_modules npm
 
-LABEL "org.opencontainers.image.version"="0.0.1"
+LABEL "org.opencontainers.image.version"="0.0.2"
