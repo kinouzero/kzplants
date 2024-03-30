@@ -1,5 +1,5 @@
 # Utilisez l'image PHP de ServerSideUp
-FROM serversideup/php:latest
+FROM serversideup/php:8.2-fpm-nginx
 
 # Définissez le répertoire de travail dans le conteneur
 WORKDIR /var/www/html
