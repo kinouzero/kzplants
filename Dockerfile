@@ -21,3 +21,4 @@ RUN composer install
 RUN php artisan key:generate
 
 RUN cd public && ln -s ../node_modules npm
+LABEL "org.opencontainers.image.version"="0.0.1"
