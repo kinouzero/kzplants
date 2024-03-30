@@ -1,8 +1,12 @@
-version: '3'
+version: '3.8'
 services:
   app:
-    image: serversideup/php:8.2-fpm-nginx
+    build:
+      context: .
     ports:
-      - "8000:80"
+      - 80:80
+    environment:
+      - SSL_MODE=off
+      - AUTORUN_ENABLED=true
     volumes:
       - .:/var/www/html
