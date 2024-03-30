@@ -17,7 +17,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th>Tags</th>
             <th>Properties</th>
@@ -28,7 +27,6 @@
           <tbody>
             @foreach ($strains as $strain)
               <tr>
-                <td class="text-center">{{ $strain->id }}</td>
                 <td>{{ $strain->name }}</td>
                 <td>
                   {!! $strain->templateTags() !!}

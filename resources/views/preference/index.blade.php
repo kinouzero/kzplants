@@ -17,7 +17,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th class="text-end">Actions</th>
           </tr>
@@ -26,7 +25,6 @@
           <tbody>
             @foreach ($preferences as $preference)
               <tr>
-                <td class="text-center">{{ $preference->id }}</td>
                 <td>{{ $preference->name }}</td>
                 <td>
                   <div class="d-flex align-items-center">

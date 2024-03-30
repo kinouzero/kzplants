@@ -17,17 +17,15 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Items</th>
-            <th class="text-end">Actions</th>
+            <th data-priority="1">Name</th>
+            <th data-priority="2" data-orderable="false">Items</th>
+            <th class="text-end" data-orderable="false">Actions</th>
           </tr>
         </thead>
         @if ($checklists)
           <tbody>
             @foreach ($checklists as $checklist)
               <tr>
-                <td class="text-center">{{ $checklist->id }}</td>
                 <td>{{ $checklist->name }}</td>
                 <td>
                   @foreach ($checklist->items as $item)

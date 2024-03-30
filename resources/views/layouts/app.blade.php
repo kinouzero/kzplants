@@ -31,11 +31,13 @@
   <body class="bg-light z-2">
 
       @if (auth()->check())
-        @include('layouts.header')
         @include('layouts.sidebar')
       @endif
 
-      <div id="container" class="p-3 {{ auth()->check() ? '' : 'ms-0' }}">
+      <div class="container p-3 {{ auth()->check() ? '' : 'ms-0' }}">
+         @if (auth()->check())
+          @include('layouts.header')
+        @endif
         @if (session('success'))
             @include('layouts.alert', [
                 'color' => 'success',

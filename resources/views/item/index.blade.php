@@ -17,7 +17,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th>Checklist</th>
             <th>Parent</th>
@@ -28,7 +27,6 @@
           <tbody>
             @foreach ($items as $item)
               <tr>
-                <td class="text-center">{{ $item->id }}</td>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->checklist->name }}</td>
                 <td>{{ $item->parent ? $item->parent->name : '' }}</td>

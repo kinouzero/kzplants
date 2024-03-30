@@ -17,7 +17,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th class="text-end">Actions</th>
           </tr>
@@ -26,7 +25,6 @@
           <tbody>
             @foreach ($properties as $property)
               <tr>
-                <td class="text-center">{{ $property->id }}</td>
                 <td>{{ $property->name }}</td>
                 <td>
                   <div class="d-flex align-items-center">

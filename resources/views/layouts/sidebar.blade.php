@@ -1,4 +1,4 @@
-<div class="sidebar bg-dark position-fixed h-100 top-0 left-0 d-flex flex-column" id="sidebar">
+<div class="sidebar bg-dark position-fixed h-100 top-0 left-0 flex-column" id="sidebar">
 
   <div class="d-flex pt-3 px-3">
     <a class="text-white text-decoration-none d-flex align-items-center justify-content-center" href="/">
@@ -7,7 +7,7 @@
       </div>
       <div class="nav-title">kzPlants</div>
     </a>
-    <a href="#" class="text-white" id="toggle-sidebar"><i class="fas fa-bars"></i></a>
+    <a href="#" class="text-white toggle-sidebar"><i class="fas fa-bars"></i></a>
   </div>
 
   <ul class="navbar-nav flex-column mb-auto mx-auto w-100">

@@ -17,7 +17,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th>Roles</th>
             <th class="text-end">Actions</th>
@@ -27,7 +26,6 @@
           <tbody>
             @foreach ($users as $user)
               <tr>
-                <td class="text-center">{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>
                   {{ implode(', ', $user->roles->pluck('name')->toArray()) }}

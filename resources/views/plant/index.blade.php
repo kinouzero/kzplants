@@ -21,7 +21,6 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>#</th>
             <th>Name</th>
             <th>Strain</th>
             <th>Tags</th>
@@ -33,7 +32,6 @@
           <tbody>
             @foreach ($plants as $plant)
               <tr>
-                <td class="text-center">{{ $plant->id }}</td>
                 <td>
                   <div class="d-flex align-items-center">
                     <span class="badge text-nowrap me-2" style="background-color:{{ $plant->statut->color }}">
