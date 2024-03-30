@@ -8,4 +8,4 @@ services:
     ports:
       - 80:80
     volumes:
-      - .env:/var/www/html/.env
+      - .:/var/www/html
