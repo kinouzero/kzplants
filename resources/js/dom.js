@@ -21,9 +21,14 @@ function initDom(scope) {
   // Masonry
   initMasonry(scope.find('.masonry'));
 
-  // Add row btn
+  // Row btns
   scope.find('.btn-add-row').click(function () {
     addRow($($(this).data('row-container')));
+  });
+
+  scope.find('.btn-remove-row').click(function () {
+    console.log($(this));
+    removeRow($(this).closest('.row'), $(this).closest('.row-list'));
   });
 
   // Tooltip
@@ -87,11 +92,26 @@ function initBtnForm(dom) {
 }
 
 function addRow(dom) {
+  // Clean allert if needed
+  dom.find('.alert').remove();
+
+  // Clone row
   let newRow = dom.find('.row-clone.d-none').clone().removeClass('row-clone d-none');
   newRow.html(newRow.html().replace(/uid/g, Math.random().toString(36).substring(2, 11)));
   newRow.find('select').addClass('select2');
   dom.append(newRow);
+
+  // Init
   initSelect2(newRow.find('.select2'));
+  newRow.find('.btn-remove-row').click(function () {
+    removeRow($(this).closest('.row'), $(this).closest('.row-list'));
+  });
+}
+
+function removeRow(dom, parent) {
+  console.log(dom, parent);
+  dom.remove();
+  if (parent.find('.row').not('.row-clone').length === 0) parent.append('<div class="alert alert-secondary text-center">' + parent.data('empty-msg') + '</div>')
 }
 
 function initMasonry(dom) {

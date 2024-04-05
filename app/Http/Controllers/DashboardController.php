@@ -36,18 +36,22 @@ class DashboardController extends Controller {
     $dashboard = null;
     $users     = User::all();
 
+    $title = 'Create new dashboard';
+
     $options   = [];
     foreach ($users as $user) {
       if ($user->id === auth()->user()->id || $dashboard && $dashboard->creator()->id === $user->id) continue;
       $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
     }
 
-    return view('dashboard.create', compact('dashboard', 'options'));
+    return view('dashboard.edit', compact('dashboard', 'options', 'title'));
   }
 
   public function edit($id) {
     $dashboard = Dashboard::findOrFail($id);
     $users     = User::all();
+
+    $title = sprintf('Edit dashboard: %s', $dashboard->name);
 
     $options   = [];
     foreach ($users as $user) {
@@ -55,7 +59,7 @@ class DashboardController extends Controller {
       $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => $dashboard->users()->where('id', $user->id)->exists()]);
     }
 
-    return view('dashboard.edit', compact('dashboard', 'options'));
+    return view('dashboard.edit', compact('dashboard', 'options', 'title'));
   }
 
   public function detail($id) {

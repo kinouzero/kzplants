@@ -18,13 +18,17 @@ class PreferenceController extends Controller {
   public function create() {
     $preference = null;
 
-    return view('preference.create', compact('preference'));
+    $title = 'Create new preference';
+
+    return view('preference.edit', compact('preference', 'title'));
   }
 
   public function edit($id) {
     $preference = Preference::findOrFail($id);
 
-    return view('preference.edit', compact('preference'));
+    $title = sprintf('Edit preference: %s', $preference->name);
+
+    return view('preference.edit', compact('preference', 'title'));
   }
 
   public function detail($id) {

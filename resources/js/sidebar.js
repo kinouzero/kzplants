@@ -23,23 +23,6 @@ jQuery(function ($) {
     $('.page-wrapper').addClass('toggled');
   });
 
-  $('#pin-sidebar').click(function () {
-    const pageWrapper = $('.page-wrapper');
-    if (pageWrapper.hasClass('pinned')) {
-      pageWrapper.removeClass('pinned');
-      $(this).find('i').toggleClass('fa-thumbtack fa-down-left-and-up-right-to-center');
-      $('#sidebar').unbind();
-    } else {
-      pageWrapper.addClass('pinned');
-      $(this).find('i').toggleClass('fa-down-left-and-up-right-to-center fa-thumbtack');
-      $('#sidebar').hover(function () {
-        pageWrapper.addClass('sidebar-hovered');
-      }, function () {
-        pageWrapper.removeClass('sidebar-hovered');
-      });
-    }
-  });
-
   $('#toggle-theme').click(function () {
     const body = $('body');
     const theme = body.attr('data-bs-theme');

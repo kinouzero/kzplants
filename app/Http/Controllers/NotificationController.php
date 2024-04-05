@@ -20,26 +20,30 @@ class NotificationController extends Controller {
     $notification = null;
     $users        = User::all();
 
+    $title = 'Create new notification';
+
     $options   = [];
     foreach ($users as $user) {
       if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) continue;
       $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
     }
 
-    return view('notification.create', compact('notification', 'options'));
+    return view('notification.edit', compact('notification', 'options', 'title'));
   }
 
   public function edit($id) {
     $notification = Notification::findOrFail($id);
     $users        = User::all();
 
+    $title = sprintf('Edit notification: %s', $notification->name);
+
     $options   = [];
     foreach ($users as $user) {
       if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) continue;
       $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
     }
 
-    return view('notification.edit', compact('notification', 'options'));
+    return view('notification.edit', compact('notification', 'options', 'title'));
   }
 
   public function detail($id) {

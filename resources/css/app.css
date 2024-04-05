@@ -127,6 +127,7 @@ hex-input~label {
 [data-bs-theme=dark] .select2-container--bootstrap-5 .select2-dropdown,
 [data-bs-theme=dark] .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field,
 [data-bs-theme=dark] .select2-selection__choice__display,
+[data-bs-theme=dark] .select2-selection__rendered,
 [data-bs-theme=dark] .select2-container .select2-selection {
   background-color: var(--bs-dark) !important;
   color: var(--bs-light) !important;

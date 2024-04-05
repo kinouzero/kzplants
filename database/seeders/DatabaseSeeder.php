@@ -37,9 +37,13 @@ class DatabaseSeeder extends Seeder {
     $user->roles()->attach($roles);
 
     // Preferences
-    Preference::create(['name' => 'Table length', 'type' => 'checklist', 'options' => json_encode(['props' => [10 => 10, 25 => 25, 50 => 50, 100 => 100]])]);
-    Preference::create(['name' => 'Language', 'type' => 'checklist', 'options' => json_encode(['props' => ['en' => 'English', 'fr' => 'French']])]);
-    Preference::create(['name' => 'Timezone', 'type' => 'string']);
+    Preference::create(['key' => 'lang', 'name' => 'Language', 'type' => 'checklist', 'options' => json_encode(['props' => ['en' => 'English', 'fr' => 'French']])]);
+    Preference::create(['key' => 'theme', 'name' => 'Dark mode', 'type' => 'checklist', 'options' => json_encode(['props' => ['dark' => 'dark', 'light' => 'light']])]);
+    Preference::create(['key' => 'table-length', 'name' => 'Table length', 'type' => 'checklist', 'options' => json_encode(['props' => [10 => 10, 25 => 25, 50 => 50, 100 => 100]])]);
+    Preference::create(['key' => 'timezone', 'name' => 'Timezone', 'type' => 'text']);
+    Preference::create(['key' => 'flush', 'name' => 'Flush weeks', 'type' => 'number']);
+    Preference::create(['key' => 'interval-watering-chemical', 'name' => 'Interval between chemical', 'type' => 'number']);
+    Preference::create(['key' => 'interval-watering-water', 'name' => 'Interval between water', 'type' => 'number']);
 
     // Status
     $statutNew = Statut::create([

@@ -82,7 +82,7 @@ class User extends Authenticatable {
    * Get user timezone
    */
   public static function getUserTimezone($user) {
-    $preference = Preference::where('name', 'ilike', 'timezone')->first();
+    $preference = Preference::where('key', 'timezone')->first();
     return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.timezone');
   }
 
@@ -90,7 +90,7 @@ class User extends Authenticatable {
    * Get user language
    */
   public static function getUserLanguage($user) {
-    $preference = Preference::where('name', 'ilike', 'language')->first();
+    $preference = Preference::where('key', 'language')->first();
     return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.locale');
   }
 
@@ -98,7 +98,7 @@ class User extends Authenticatable {
    * Get user page length
    */
   public static function getUserTableLength($user) {
-    $preference = Preference::where('name', 'ilike', 'table%length')->first();
+    $preference = Preference::where('key', 'table-length')->first();
     return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : 25;
   }
 
@@ -106,7 +106,7 @@ class User extends Authenticatable {
    * Get user theme
    */
   public static function getUserTheme($user) {
-    $preference = Preference::where('name', 'ilike', 'theme')->first();
+    $preference = Preference::where('key', 'theme')->first();
     return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : env('APP_THEME', 'light');
   }
 

@@ -44,14 +44,20 @@
       'extra' => ['input' => 'multiple'],
   ])
 
-  <hr />
+  <div class="card mb-3">
+    <div class="card-body pb-0">
 
-  <h3 class="text-center"><i class="fas fa-sitemap me-2"></i>Properties</h3>
+      <h3 class="text-center"><i class="fas fa-sitemap me-2"></i>Properties</h3>
 
-  <div id="plant-properties">
+      <div id="plant-properties" class="row-list" data-empty-msg="No property yet">
 
-    {!! implode('', $template_properties) !!}
+        <hr />
 
+        {!! implode('', $template_properties) !!}
+
+      </div>
+
+    </div>
   </div>
 
   <hr />

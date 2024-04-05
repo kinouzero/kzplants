@@ -167,16 +167,9 @@
   </div>
 
   <div class="sidebar-footer">
-    <div class="col text-center">
-      <div class="pin-footer text-white m-auto" id="pin-sidebar" style="cursor: pointer">
-        <i class="fas fa-down-left-and-up-right-to-center m-auto"></i>
-      </div>
-    </div>
-    <div class="col text-center">
-      <div class="text-white m-auto" id="toggle-theme" style="cursor: pointer" data-bs-toggle="tooltip"
-        data-bs-placement="top" title="Toggle {{ auth()->user()->getTheme() === 'light' ? 'dark' : 'light' }} mode">
-        <i class="far fa-{{ auth()->user()->getTheme() === 'light' ? 'moon' : 'sun' }} m-auto"></i>
-      </div>
+    <div class="text-white m-auto" id="toggle-theme" style="cursor: pointer" data-bs-toggle="tooltip"
+      data-bs-placement="top" title="Toggle {{ auth()->user()->getTheme() === 'light' ? 'dark' : 'light' }} mode">
+      <i class="far fa-{{ auth()->user()->getTheme() === 'light' ? 'moon' : 'sun' }} m-auto"></i>
     </div>
   </div>
 </div>

@@ -20,20 +20,24 @@ class ChecklistController extends Controller {
     $checklist  = null;
     $checklists = Checklist::all();
 
+    $title = 'Create new checklist';
+
     $options   = [];
     foreach ($checklists as $_checklist) $options[] = view('template.form.select.option', ['value' => $_checklist->id, 'title' => $_checklist->name, 'selected' => false]);
 
-    return view('checklist.create', compact('checklist', 'options'));
+    return view('checklist.edit', compact('checklist', 'options', 'title'));
   }
 
   public function edit($id) {
     $checklist  = Checklist::findOrFail($id);
     $checklists = Checklist::all();
 
+    $title = sprintf('Edit checklist: %s', $checklist->name);
+
     $options   = [];
     foreach ($checklists as $_checklist) $options[] = view('template.form.select.option', ['value' => $_checklist->id, 'title' => $_checklist->name, 'selected' => $checklist->parents->contains('id', $_checklist->id)]);
 
-    return view('checklist.edit', compact('checklist', 'options'));
+    return view('checklist.edit', compact('checklist', 'options', 'title'));
   }
 
   // Actions

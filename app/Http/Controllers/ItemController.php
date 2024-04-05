@@ -20,22 +20,26 @@ class ItemController extends Controller {
     $item       = null;
     $checklists = Checklist::all();
 
+    $title = 'Create new item';
+
     $options_checklists = $options_parents = [];
     foreach ($checklists as $checklist) $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => false]);
     if ($item && $item->checklist) foreach ($item->checklist->items as $_item) if ($item && ($item->id === $_item->id || ($_item->child && $item->id !== $_item->child->id))) $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => false]);
 
-    return view('item.create', compact('item', 'options_checklists', 'options_parents'));
+    return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
   }
 
   public function edit($id) {
     $item       = Item::findOrFail($id);
     $checklists = Checklist::all();
 
+    $title = sprintf('Edit item: %s', $item->name);
+
     $options_checklists = $options_parents = [];
     foreach ($checklists as $checklist) $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => $item->checklist->id === $checklist->id]);
     if ($item->checklist) foreach ($item->checklist->items as $_item) if ($item->id !== $_item->id || ($_item->child && $item->id !== $_item->child->id)) $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => $item->parent && $item->parent->id === $_item->id]);
 
-    return view('item.edit', compact('item', 'options_checklists', 'options_parents'));
+    return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
   }
 
   public function detail($id) {

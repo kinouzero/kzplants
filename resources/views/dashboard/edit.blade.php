@@ -1,15 +1,15 @@
 @extends('template.app')
 
 @section('content')
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body">
 
-      <h1 class="text-center">Edit dashboard</h1>
+      <h1><i class="far fa-pencil-alt fa-2xs me-3"></i>{{ $title }}</h1>
 
       <hr />
 
       @include('template.dashboard.form', [
-          'action' => route('dashboard.update', ['id' => $dashboard->id]),
+          'action' => $dashboard ? route('dashboard.update', ['id' => $dashboard->id]) : route('dashboard.store'),
       ])
 
     </div>

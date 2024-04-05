@@ -1,15 +1,15 @@
 @extends('template.app')
 
 @section('content')
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body">
 
-      <h1 class="text-center">Edit checklist</h1>
+      <h1><i class="far fa-pencil-alt fa-2xs me-3"></i>{{ $title }}</h1>
 
       <hr />
 
       @include('template.checklist.form', [
-          'action' => route('checklist.update', ['id' => $checklist->id]),
+          'action' => $checklist ? route('checklist.update', ['id' => $checklist->id]) : route('checklist.store'),
       ])
 
     </div>

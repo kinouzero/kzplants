@@ -1,14 +1,17 @@
 @extends('template.app')
 
 @section('content')
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body">
 
-      <h1 class="text-center">Edit user</h1>
+      <h1><i class="far fa-pencil-alt fa-2xs me-3"></i>{{ $title }}</h1>
 
       <hr />
 
-      @include('template.user.form', ['action' => route('user.update', ['id' => $user->id])])
+      @include('template.user.form', [
+          'action' => $user ? route('user.update', ['id' => $user->id]) : route('user.store'),
+      ])
+
     </div>
   </div>
 @endsection

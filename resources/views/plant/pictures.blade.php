@@ -3,7 +3,7 @@
 @section('content')
   @include('template.picture.gallery', ['object' => $plant, 'class' => 'mb-3'])
 
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body pb-0">
 
       <h1><i class="far fa-file-image fa-xs me-2"></i>Upload</h1>

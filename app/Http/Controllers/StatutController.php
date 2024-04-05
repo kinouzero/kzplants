@@ -18,13 +18,17 @@ class StatutController extends Controller {
   public function create() {
     $statut = null;
 
-    return view('statut.create', compact('statut'));
+    $title = 'Create new statut';
+
+    return view('statut.edit', compact('statut', 'title'));
   }
 
   public function edit($id) {
     $statut = Statut::findOrFail($id);
 
-    return view('statut.edit', compact('statut'));
+    $title = sprintf('Edit statut: %s', $statut->name);
+
+    return view('statut.edit', compact('statut', 'title'));
   }
 
   public function detail($id) {

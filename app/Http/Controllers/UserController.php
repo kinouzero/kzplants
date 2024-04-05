@@ -20,8 +20,42 @@ class UserController extends Controller {
   public function create() {
     $user = null;
     $roles = Role::all();
+    $preferences = Preference::all();
 
-    return view('user.create', compact('user', 'roles'));
+    $title = 'Create new user';
+
+    $template_preferences = [];
+    foreach ($preferences as $preference) {
+
+      $options_preferences = [];
+      if (($options = $preference->options()) && array_key_exists('props', $options)) foreach ($options['props'] as $k => $v) $options_preferences[] = view('template.form.select.option', ['value' => $k, 'title' => $v, 'selected' => false]);
+
+      if ($preference->type === 'checklist') $template_preferences[] = view('template.form.floating', [
+        'type' => 'select',
+        'id' => sprintf('preference-%s', $preference->id),
+        'name' => sprintf(
+          'preference[%s]%s',
+          $preference->id,
+          $options && array_key_exists('multiple', $options) ? '[]' : ''
+        ),
+        'label' => $preference->name,
+        'options' => implode('', $options_preferences),
+        'placeholder' => 'Select',
+        'class' => ['parent' => 'mb-3', 'input' => 'select2'],
+        'extra' => ['input' => $options && array_key_exists('multiple', $options) ? 'multiple' : ''],
+      ]);
+      else $template_preferences[] = view('template.form.floating', [
+        'type' => $preference->type,
+        'id' => sprintf('preference-%s', $preference->id),
+        'name' => sprintf('preference_%s', $preference->id),
+        'label' => $preference->name,
+        'value' => '',
+        'class' => ['parent' => 'mb-3'],
+        'extra' => null,
+      ]);
+    }
+
+    return view('user.edit', compact('user', 'roles', 'template_preferences', 'title'));
   }
 
   public function edit($id) {
@@ -29,7 +63,41 @@ class UserController extends Controller {
     $roles       = Role::all();
     $preferences = Preference::all();
 
-    return view('user.edit', compact('user', 'roles', 'preferences'));
+    $title = sprintf('Edit user: %s', $user->name);
+
+    $template_preferences = [];
+    foreach ($preferences as $preference) {
+      $userPref = $user ? $user->preferences()->where('preference_id', $preference->id)->first() : null;
+
+      $options_preferences = [];
+      if (($options = $preference->options()) && array_key_exists('props', $options)) foreach ($options['props'] as $k => $v) $options_preferences[] = view('template.form.select.option', ['value' => $k, 'title' => $v, 'selected' => $userPref && $userPref->pivot->value == $k]);
+
+      if ($preference->type === 'checklist') $template_preferences[] = view('template.form.floating', [
+        'type' => 'select',
+        'id' => sprintf('preference-%s', $preference->id),
+        'name' => sprintf(
+          'preferences[%s]%s',
+          $preference->id,
+          $options && array_key_exists('multiple', $options) ? '[]' : ''
+        ),
+        'label' => $preference->name,
+        'options' => implode('', $options_preferences),
+        'placeholder' => 'Select',
+        'class' => ['parent' => 'mb-3', 'input' => 'select2'],
+        'extra' => ['input' => $options && array_key_exists('multiple', $options) ? 'multiple' : ''],
+      ]);
+      else $template_preferences[] = view('template.form.floating', [
+        'type' => 'text',
+        'id' => sprintf('preference-%s', $preference->id),
+        'name' => sprintf('preferences[%s]', $preference->id),
+        'label' => $preference->name,
+        'value' => $userPref ? $userPref->pivot->value : '',
+        'class' => ['parent' => 'mb-3'],
+        'extra' => null,
+      ]);
+    }
+
+    return view('user.edit', compact('user', 'roles', 'preferences', 'title', 'template_preferences'));
   }
 
   public function detail($id) {
@@ -75,7 +143,7 @@ class UserController extends Controller {
     else if (!$args['password2'] || ($args['password'] !== $args['password2'])) return redirect()->back()->withInput()->with('error', 'Les mots de passes ne correspondent pas');
 
     // Roles
-    $roles = isset($args['roles']) ? Role::whereIn('id', $args['tarolesgs'])->get() : null;
+    $roles = isset($args['roles']) ? Role::whereIn('id', $args['roles'])->get() : null;
     $user->roles()->sync($roles ? $roles->pluck('id')->toArray() : []);
     unset($args['roles']);
 

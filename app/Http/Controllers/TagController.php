@@ -18,13 +18,17 @@ class TagController extends Controller {
   public function create() {
     $tag = null;
 
-    return view('tag.create', compact('tag'));
+    $title = 'Create new tag';
+
+    return view('tag.edit', compact('tag', 'title'));
   }
 
   public function edit($id) {
     $tag = Tag::findOrFail($id);
 
-    return view('tag.edit', compact('tag'));
+    $title = sprintf('Edit tag: %s', $tag->name);
+
+    return view('tag.edit', compact('tag', 'title'));
   }
 
   public function detail($id) {

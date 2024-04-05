@@ -11,8 +11,10 @@ return new class extends Migration {
   public function up(): void {
     Schema::create('preferences', function (Blueprint $table) {
       $table->id()->primary();
+      $table->string('key');
       $table->string('name');
       $table->string('type');
+      $table->string('description')->nullable();
       $table->string('options')->nullable();
       $table->timestamps();
     });

@@ -24,6 +24,8 @@ class StrainController extends Controller {
     $tags       = Tag::all();
     $properties = Property::all();
 
+    $title = 'Create new strain';
+
     $options_tags = $options_properties = [];
     foreach ($tags as $tag) $options_tags[] = view('template.form.select.option', ['value' => $tag->id, 'title' => $tag->name, 'selected' => false]);
     foreach ($properties as $property) $options_properties[] = view('template.form.select.option', ['value' => $property->id, 'title' => $property->name, 'selected' => false]);
@@ -34,13 +36,15 @@ class StrainController extends Controller {
       'options' => $options_properties,
     ])];
 
-    return view('strain.create', compact('strain', 'options_tags', 'template_properties'));
+    return view('strain.edit', compact('strain', 'options_tags', 'template_properties', 'title'));
   }
 
   public function edit($id) {
     $strain     = Strain::findOrFail($id);
     $tags       = Tag::all();
     $properties = Property::all();
+
+    $title = sprintf('Edit strain: %s', $strain->name);
 
     $options_tags = $options_properties = $value_properties = [];
     foreach ($tags as $tag) $options_tags[] = view('template.form.select.option', ['value' => $tag->id, 'title' => $tag->name, 'selected' => $strain->tags->contains('id', $tag->id)]);
@@ -60,7 +64,7 @@ class StrainController extends Controller {
       'options' => $options,
     ]);
 
-    return view('strain.edit', compact('strain', 'options_tags', 'template_properties'));
+    return view('strain.edit', compact('strain', 'options_tags', 'template_properties', 'title'));
   }
 
   public function pictures($id) {

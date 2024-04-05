@@ -35,19 +35,20 @@ class PlantController extends Controller {
     $tags       = Tag::all();
     $properties = Property::all();
 
+    $title = 'Create new plant';
+
     $options_dashboards = $options_strains = $options_tags = $options_properties = [];
     foreach ($dashboards as $_dashboard) $options_dashboards[] = view('template.form.select.option', ['value' => $_dashboard->id, 'title' => $_dashboard->name, 'selected' => Dashboard::getCurrentDashboard()->id === $_dashboard->id]);
     foreach ($strains as $strain) $options_strains[] = view('template.form.select.option', ['value' => $strain->id, 'title' => $strain->name, 'selected' => false]);
     foreach ($tags as $tag) $options_tags[] = view('template.form.select.option', ['value' => $tag->id, 'title' => $tag->name, 'selected' => false]);
     foreach ($properties as $property) $options_properties[] = view('template.form.select.option', ['value' => $property->id, 'title' => $property->name, 'selected' => false]);
 
-    $template_properties = [view('template.property.form.row', [
-      'id' => null,
-      'value' => '',
-      'options' => $options_properties,
-    ])];
+    $template_properties = [
+      view('template.property.form.row', ['id' => null, 'value' => '', 'options' => $options_properties]),
+      view('template.alert', ['color' => 'secondary', 'class' => 'mb-0', 'content' => 'No property yet'])
+    ];
 
-    return view('plant.create', compact('plant', 'options_dashboards', 'options_strains', 'options_tags', 'template_properties'));
+    return view('plant.edit', compact('plant', 'options_dashboards', 'options_strains', 'options_tags', 'template_properties', 'title'));
   }
 
   public function edit($id) {
@@ -57,6 +58,9 @@ class PlantController extends Controller {
     $tags       = Tag::all();
     $properties = Property::all();
 
+    $title = sprintf('Edit plant: %s', $plant->name);
+
+    $alert = null;
     $options_dashboards = $options_strains = $options_tags = $options_properties = $value_properties = [];
     foreach ($dashboards as $_dashboard) $options_dashboards[] = view('template.form.select.option', ['value' => $_dashboard->id, 'title' => $_dashboard->name, 'selected' => $plant->dashboards()->where('dashboard_id', $_dashboard->id)->exists()]);
     foreach ($strains as $strain) $options_strains[] = view('template.form.select.option', ['value' => $strain->id, 'title' => $strain->name, 'selected' => $plant->strain->id === $strain->id]);
@@ -64,10 +68,11 @@ class PlantController extends Controller {
     foreach ($properties as $property) {
       $options_properties['clone'][] = view('template.form.select.option', ['value' => $property->id, 'title' => $property->name, 'selected' => false]);
       $value_properties['clone'] = null;
-      if ($plant && $plant->properties) foreach ($plant->properties as $plantProperty) {
+      if ($plant && $plant->properties->count() > 0) foreach ($plant->properties as $plantProperty) {
         $options_properties[$plantProperty->pivot->property_id][] = view('template.form.select.option', ['value' => $property->id, 'title' => $property->name, 'selected' => $plantProperty->pivot->property_id === $property->id]);
         $value_properties[$plantProperty->pivot->property_id] = $plantProperty->pivot->value;
       }
+      else $alert = view('template.alert', ['color' => 'secondary', 'class' => 'mb-0', 'content' => 'No property yet']);
     }
 
     $template_properties = [];
@@ -77,7 +82,9 @@ class PlantController extends Controller {
       'options' => $options,
     ]);
 
-    return view('plant.edit', compact('plant', 'options_dashboards', 'options_strains', 'options_tags', 'template_properties'));
+    if ($alert) $template_properties[] = $alert;
+
+    return view('plant.edit', compact('plant', 'options_dashboards', 'options_strains', 'options_tags', 'template_properties', 'title'));
   }
 
   public function detail($id) {

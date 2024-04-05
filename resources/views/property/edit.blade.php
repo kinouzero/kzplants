@@ -1,15 +1,17 @@
 @extends('template.app')
 
 @section('content')
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body">
 
-      <h1 class="text-center">Edit property</h1>
+      <h1><i class="far fa-pencil-alt fa-2xs me-3"></i>{{ $title }}</h1>
 
       <hr />
 
-      @include('template.property.form', ['action' => route('property.update', ['id' => $property->id])])
-      property
+      @include('template.property.form', [
+          'action' => $property ? route('property.update', ['id' => $property->id]) : route('property.store'),
+      ])
+
     </div>
   </div>
 @endsection

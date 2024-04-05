@@ -1,7 +1,7 @@
 @extends('template.app')
 
 @section('content')
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-body">
 
       <h1 class="d-flex text-center align-items-center">

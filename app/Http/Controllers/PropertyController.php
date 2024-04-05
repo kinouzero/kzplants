@@ -18,13 +18,17 @@ class PropertyController extends Controller {
   public function create() {
     $property = null;
 
-    return view('property.create', compact('property'));
+    $title = 'Create new property';
+
+    return view('property.edit', compact('property', 'title'));
   }
 
   public function edit($id) {
     $property = Property::findOrFail($id);
 
-    return view('property.edit', compact('property'));
+    $title = sprintf('Edit property: %s', $property->name);
+
+    return view('property.edit', compact('property', 'title'));
   }
 
   public function detail($id) {
