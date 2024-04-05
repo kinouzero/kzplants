@@ -79,35 +79,39 @@
   content: none;
 }
 
-.timeline-item.w-chem:not(.period) .timeline-marker:before {
-  background: var(--danger);
+.timeline-item:not(.period) .timeline-marker:before {
+  background: var(--bs-secondary);
+}
+
+.timeline-item:not(.period) .timeline-marker:before {
+  background: var(--bs-secondary);
 }
 
 .timeline-item.wo-chem:not(.period) .timeline-marker:before {
-  background: var(--primary);
+  background: var(--bs-primary);
 }
 
 .timeline-item.wo-chem:not(.period):hover .timeline-marker:before {
   background: transparent;
-  border: 3px solid var(--primary);
+  border: 3px solid var(--bs-primary);
 }
 
 .timeline-item.w-chem:not(.period) .timeline-marker:before {
-  background: var(--danger);
+  background: var(--bs-danger);
 }
 
-.timeline-item.wo-chem:not(.period):hover .timeline-marker:before {
+.timeline-item.w-chem:not(.period):hover .timeline-marker:before {
   background: transparent;
-  border: 3px solid var(--danger);
+  border: 3px solid var(--bs-danger);
 }
 
 .timeline-item:last-child:not(.period) .timeline-marker:before {
-  background: var(--success);
+  background: var(--bs-success);
 }
 
 .timeline-item:last-child:not(.period):hover .timeline-marker:before {
   background: transparent;
-  border: 3px solid var(--success);
+  border: 3px solid var(--bs-success);
 }
 
 /*----- TIMELINE CONTENT -----*/
@@ -129,8 +133,9 @@
 }
 
 .timeline-item.period .timeline-title {
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 1px;
+  font-size: 1rem;
 }
 
 /*----- TIMELINE PERIOD -----*/

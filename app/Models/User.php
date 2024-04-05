@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class User extends Authenticatable {
   use HasFactory, Notifiable;
@@ -59,6 +58,20 @@ class User extends Authenticatable {
   }
 
   /**
+   * Dashboards
+   */
+  public function dashboards() {
+    return $this->belongsToMany(Dashboard::class, 'dashboard_users', 'user_id', 'dashboard_id')->withPivot('default');
+  }
+
+  /**
+   * Notifications
+   */
+  public function notifications() {
+    return $this->belongsToMany(Notification::class, 'notification_users', 'user_id', 'notification_id')->withPivot('creator', 'active');
+  }
+
+  /**
    * Check if the user is an admin
    */
   public function isAdmin() {
@@ -68,24 +81,36 @@ class User extends Authenticatable {
   /**
    * Get user timezone
    */
-  public static function getTimezone($user) {
+  public static function getUserTimezone($user) {
     $preference = Preference::where('name', 'ilike', 'timezone')->first();
-    return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.timezone');
+    return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.timezone');
   }
 
   /**
    * Get user language
    */
-  public static function getLanguage($user) {
+  public static function getUserLanguage($user) {
     $preference = Preference::where('name', 'ilike', 'language')->first();
-    return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.locale');
+    return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : config('app.locale');
   }
 
   /**
    * Get user page length
    */
-  public static function getTableLength($user) {
+  public static function getUserTableLength($user) {
     $preference = Preference::where('name', 'ilike', 'table%length')->first();
-    return ($userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : 25;
+    return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : 25;
+  }
+
+  /**
+   * Get user theme
+   */
+  public static function getUserTheme($user) {
+    $preference = Preference::where('name', 'ilike', 'theme')->first();
+    return ($preference && $user && $userPref = $user->preferences()->where('id', $preference->id)->first()) ? $userPref->pivot->value : env('APP_THEME', 'light');
+  }
+
+  public static function getTheme() {
+    return session('theme') ?: self::getUserTheme(auth()->user());
   }
 }

@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Watering extends Model {
-  use HasFactory;
 
   protected $table = 'plant_waterings';
 
@@ -27,6 +25,6 @@ class Watering extends Model {
    * Template timeline
    */
   public function templateTimeline($content = null, $info = null) {
-    return view('layouts.timeline.item', ['info' => $info, 'content' => $content, 'class' => $this->chemical ? 'w-chem' : 'wo-chem']);
+    return view('template.timeline.item', ['info' => $info, 'content' => $content, 'class' => $this->chemical ? 'w-chem' : 'wo-chem']);
   }
 }

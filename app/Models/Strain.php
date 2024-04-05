@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Strain extends Model {
-  use HasFactory;
 
   protected $table = 'strains';
 
@@ -16,36 +13,17 @@ class Strain extends Model {
   ];
 
   /**
-   * Search
-   */
-  public function search($search, $order = [], $limit = 25) {
-    $query = Strain::query();
-
-    // Join
-    $query->join('$tags', '$tags.id', '=', 'strains.tag_id');
-    $query->join('strain_properties', 'strain_properties.strain_id', '=', 'strains.id');
-    $query->join('properties', 'properties.id', '=', 'strain_properties.property_id');
-
-    // Where
-    $query->where('strains.name', 'ilike', '%' . $search . '%');
-    $query->orWhere('$tags.name', 'ilike', '%' . $search . '%');
-    $query->orWhere('strain_properties.value', 'ilike', '%' . $search . '%');
-    $query->orWhere('properties.name', 'ilike', '%' . $search . '%');
-
-    // Order
-    $query->orderBy($order['by'] ?: 'strains.name', $order['dir'] ?: 'desc');
-
-    // Limit
-    $query->limit($limit);
-
-    return $query->get();
-  }
-
-  /**
    * Pictures
    */
   public function pictures() {
-    return $this->belongsToMany(Picture::class, 'strain_pictures', 'strain_id', 'picture_id');
+    return $this->belongsToMany(Picture::class, 'strain_pictures', 'strain_id', 'picture_id')->withPivot('default');
+  }
+
+  /**
+   * Default picture
+   */
+  public function defaultPicture() {
+    return $this->pictures()->wherePivot('default', true)->first();
   }
 
   /**
@@ -77,14 +55,14 @@ class Strain extends Model {
    * Template tags
    */
   public function templateTags() {
-    return view('layouts.strain.tags', ['strain' => $this]);
+    return view('template.strain.tags', ['strain' => $this]);
   }
 
   /**
    * Template properties
    */
   public function templateProperties() {
-    return view('layouts.strain.properties', ['strain' => $this]);
+    return view('template.strain.properties', ['strain' => $this]);
   }
 
   /**

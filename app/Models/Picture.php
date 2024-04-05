@@ -2,33 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Picture extends Model {
-  use HasFactory;
 
   protected $table = 'pictures';
+
   protected $fillable = [
     'name',
-    'path'
+    'content'
   ];
 
+  public function formatContent($path) {
+    return sprintf('0x%s', bin2hex(file_get_contents($path)));
+  }
+
+  public function getContent() {
+    return hex2bin(substr(stream_get_contents($this->content), 2));
+  }
+
+  public function ext() {
+    return pathinfo($this->name, PATHINFO_EXTENSION);
+  }
+
+  public static function upload($file) {
+    $name = $file->getClientOriginalName();
+    $file->move(public_path('uploads'), $name);
+
+    $picture          = new Picture();
+    $picture->name    = $name;
+    $picture->content = $picture->formatContent(public_path(sprintf('uploads/%s', $picture->name)));
+    $picture->save();
+
+    unlink(public_path(sprintf('uploads/%s', $name)));
+
+    return $picture;
+  }
+
   /**
-   * Search
+   * Template timeline
    */
-  public function search($search, $order = [], $limit = 25) {
-    $query = Picture::query();
-
-    // Where
-    $query->where('pictures.name', 'ilike', '%' . $search . '%');
-
-    // Order
-    $query->orderBy($order['by'] ?: 'pictures.name', $order['dir'] ?: 'desc');
-
-    // Limit
-    $query->limit($limit);
-
-    return $query->get();
+  public function templateTimeline($content = null, $info = null) {
+    return view('template.timeline.item', ['info' => $info, 'content' => $content, 'class' => null]);
   }
 }

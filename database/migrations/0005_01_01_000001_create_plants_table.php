@@ -21,6 +21,7 @@ return new class extends Migration {
     Schema::create('plant_pictures', function (Blueprint $table) {
       $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
       $table->foreignId('picture_id')->constrained('pictures')->onUpdate('cascade')->onDelete('cascade');
+      $table->boolean('default')->defaut(false);
       $table->primary(['plant_id', 'picture_id']);
     });
 
@@ -44,11 +45,21 @@ return new class extends Migration {
       $table->primary(['plant_id', 'checklist_id']);
     });
 
+    Schema::create('plant_history', function (Blueprint $table) {
+      $table->id()->primary();
+      $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
+      $table->foreignId('checklist_id')->constrained('checklists')->onUpdate('cascade')->onDelete('cascade');
+      $table->foreignId('by')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+      $table->string('data');
+      $table->timestamps();
+    });
+
     Schema::create('plant_items', function (Blueprint $table) {
       $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
       $table->foreignId('item_id')->constrained('items')->onUpdate('cascade')->onDelete('cascade');
       $table->dateTime('due', 3)->nullable();
       $table->dateTime('checked', 3)->nullable();
+      $table->boolean('flush')->default(false);
       $table->primary(['plant_id', 'item_id']);
     });
 
@@ -57,6 +68,21 @@ return new class extends Migration {
       $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
       $table->boolean('chemical')->defaut(false);
       $table->timestamps();
+    });
+
+    Schema::create('plant_comments', function (Blueprint $table) {
+      $table->id()->primary();
+      $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
+      $table->foreignId('author_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+      $table->string('value')->nullable();
+      $table->timestamps();
+    });
+
+    Schema::create('plant_preferences', function (Blueprint $table) {
+      $table->foreignId('plant_id')->constrained('plants')->onUpdate('cascade')->onDelete('cascade');
+      $table->foreignId('preference_id')->constrained('preferences')->onUpdate('cascade')->onDelete('cascade');
+      $table->string('value');
+      $table->primary(['plant_id', 'preference_id']);
     });
   }
 
@@ -69,7 +95,10 @@ return new class extends Migration {
     Schema::dropIfExists('plant_properties');
     Schema::dropIfExists('plant_tags');
     Schema::dropIfExists('plant_checklists');
+    Schema::dropIfExists('plant_history');
     Schema::dropIfExists('plant_items');
-    Schema::dropIfExists('plant_watering');
+    Schema::dropIfExists('plant_waterings');
+    Schema::dropIfExists('plant_comments');
+    Schema::dropIfExists('plant_preferences');
   }
 };

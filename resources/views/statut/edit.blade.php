@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -8,7 +8,7 @@
 
       <hr />
 
-      @include('layouts.statut.form', ['action' => route('statut.update', ['id' => $statut->id])])
+      @include('template.statut.form', ['action' => route('statut.update', ['id' => $statut->id])])
 
     </div>
   </div>

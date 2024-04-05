@@ -1,27 +1,30 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-
 use App\Http\Controllers\ChecklistController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PictureController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\StatutController;
 use App\Http\Controllers\StrainController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
-use App\Models\Preference;
 
 // Login
 Route::get('/login', function () {
   return view('auth.login');
 })->name('login');
 
-// Login
+// Logout
 Route::get('/logout', function () {
   return view('auth.login');
 })->name('logout');
@@ -33,10 +36,29 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+  // Upload
+  Route::post('/upload/pictures', [UploadController::class, 'pictures'])->name('upload.pictures');
+  Route::get('/picture/{id}', [PictureController::class, 'src'])->name('picture.src');
+
   // Dashboard
-  Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-  Route::get('/status/chart', [DashboardController::class, 'getStatusChart'])->name('status.chart');
-  Route::get('/water/chart', [DashboardController::class, 'getWateringsChart'])->name('water.chart');
+  Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+  Route::get('/chart/{type}', [DashboardController::class, 'getChart'])->name('chart');
+
+  // Theme
+  Route::post('/theme/toggle', [ThemeController::class, 'toggle'])->name('theme.toggle');
+
+  // Dashboard views
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+  Route::get('/dashboard/create', [DashboardController::class, 'create'])->name('dashboard.create');
+  Route::get('/dashboard/{id}/edit', [DashboardController::class, 'edit'])->name('dashboard.edit');
+  Route::get('/dashboard/{id}/detail', [DashboardController::class, 'edit'])->name('dashboard.detail');
+
+  // Dashboard actions
+  Route::post('/switch', [DashboardController::class, 'switch'])->name('switch');
+  Route::post('/dashboard', [DashboardController::class, 'store'])->name('dashboard.store');
+  Route::post('/dashboard/{id}', [DashboardController::class, 'update'])->name('dashboard.update');
+  Route::delete('/dashboard/{id}/destroy', [DashboardController::class, 'destroy'])->name('dashboard.destroy');
+  Route::post('/dashboard/{id}/default', [DashboardController::class, 'default'])->name('dashboard.default');
 
   // User views
   Route::get('/user', [UserController::class, 'index'])->name('user.index');
@@ -63,7 +85,6 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/checklist', [ChecklistController::class, 'index'])->name('checklist.index');
   Route::get('/checklist/create', [ChecklistController::class, 'create'])->name('checklist.create');
   Route::get('/checklist/{id}/edit', [ChecklistController::class, 'edit'])->name('checklist.edit');
-  Route::get('/checklist/{id}/detail', [ChecklistController::class, 'edit'])->name('checklist.detail');
 
   // Checklist actions
   Route::post('/checklist', [ChecklistController::class, 'store'])->name('checklist.store');
@@ -115,19 +136,22 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/strain', [StrainController::class, 'index'])->name('strain.index');
   Route::get('/strain/create', [StrainController::class, 'create'])->name('strain.create');
   Route::get('/strain/{id}/edit', [StrainController::class, 'edit'])->name('strain.edit');
-  Route::get('/strain/{id}/detail', [StrainController::class, 'detail'])->name('strain.detail');
+  Route::get('/strain/{id}/pictures', [StrainController::class, 'pictures'])->name('strain.pictures');
 
   // Strain actions
   Route::post('/strain', [StrainController::class, 'store'])->name('strain.store');
   Route::post('/strain/{id}', [StrainController::class, 'update'])->name('strain.update');
   Route::delete('/strain/{id}/destroy', [StrainController::class, 'destroy'])->name('strain.destroy');
+  Route::post('/strain/{id}/add/{objectType}/{objectId}', [StrainController::class, 'addToStrain'])->name('strain.add');
+  Route::post('/strain/{id}/remove/{objectType}/{objectId}', [StrainController::class, 'removeFromStrain'])->name('strain.remove');
 
   // Plant views
   Route::get('/plant', [PlantController::class, 'index'])->name('plant.index');
   Route::get('/plant/create', [PlantController::class, 'create'])->name('plant.create');
   Route::get('/plant/{id}/edit', [PlantController::class, 'edit'])->name('plant.edit');
   Route::get('/plant/{id}/detail', [PlantController::class, 'detail'])->name('plant.detail');
-  Route::get('/plant/{id}/add/list', [PlantController::class, 'addChecklist'])->name('plant.add.list');
+  Route::get('/plant/{id}/checklists', [PlantController::class, 'checklists'])->name('plant.checklists');
+  Route::get('/plant/{id}/pictures', [PlantController::class, 'pictures'])->name('plant.pictures');
 
   // Plant actions
   Route::post('/plant', [PlantController::class, 'store'])->name('plant.store');
@@ -135,9 +159,25 @@ Route::middleware(['auth'])->group(function () {
   Route::delete('/plant/{id}/destroy', [PlantController::class, 'destroy'])->name('plant.destroy');
   Route::post('/plant/{id}/add/{objectType}/{objectId}', [PlantController::class, 'addToPlant'])->name('plant.add');
   Route::post('/plant/{id}/remove/{objectType}/{objectId}', [PlantController::class, 'removeFromPlant'])->name('plant.remove');
-  Route::post('/plant/{id}/item/save/due', [PlantController::class, 'saveDue'])->name('item.save.due');
-  Route::post('/plant/{id}/item/remove/due', [PlantController::class, 'removeDue'])->name('item.remove.due');
-  Route::post('/plant/{id}/item/toggle/checked', [PlantController::class, 'toggleChecked'])->name('item.toggle.checked');
-  Route::post('/plant/{id}/water/wo/chem', [PlantController::class, 'waterWithoutChemical'])->name('water.wo.chem');
-  Route::post('/plant/{id}/water/w/chem', [PlantController::class, 'waterWithChemical'])->name('water.w.chem');
+  Route::post('/plant/{id}/item/due/save', [PlantController::class, 'itemDueSave'])->name('item.due.save');
+  Route::post('/plant/{id}/item/due/remove', [PlantController::class, 'itemDueRemove'])->name('item.due.remove');
+  Route::post('/plant/{id}/item/toggle', [PlantController::class, 'itemToggle'])->name('item.toggle');
+  Route::post('/plant/{id}/water', [PlantController::class, 'water'])->name('water');
+  Route::post('/plant/{id}/water/chem', [PlantController::class, 'waterChemical'])->name('water.chem');
+  Route::post('/plant/{id}/comment/new', [PlantController::class, 'commentAdd'])->name('comment.new');
+  Route::post('/plant/{id}/comment/edit', [PlantController::class, 'commentEdit'])->name('comment.edit');
+  Route::post('/plant/{id}/comment/remove', [PlantController::class, 'commentRemove'])->name('comment.remove');
+
+  // Notification views
+  Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
+  Route::get('/notification/create', [NotificationController::class, 'create'])->name('notification.create');
+  Route::get('/notification/{id}/edit', [NotificationController::class, 'edit'])->name('notification.edit');
+
+  // Notification actions
+  Route::post('/notification', [NotificationController::class, 'store'])->name('notification.store');
+  Route::post('/notification/{id}', [NotificationController::class, 'update'])->name('notification.update');
+  Route::delete('/notification/{id}/destroy', [NotificationController::class, 'destroy'])->name('notification.destroy');
+
+  // API Rest
+  Route::get('/api/notifications', [ApiController::class, 'notifications']);
 });

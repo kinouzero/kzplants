@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto" style="width: 300px">
@@ -11,16 +11,25 @@
       <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <div class="form-floating mb-3">
-          <input class="form-control" type="email" id="email" name="email" placeholder="email@exemple.com" required
-            autofocus>
-          <label class="form-label" for="email">Email</label>
-        </div>
+        @include('template.form.floating', [
+            'type' => 'email',
+            'id' => 'email',
+            'name' => 'email',
+            'label' => 'Email',
+            'value' => '',
+            'class' => ['parent' => 'mb-3'],
+            'extra' => ['input' => 'required autofocus'],
+        ])
 
-        <div class="form-floating">
-          <input class="form-control" type="password" id="password" name="password" placeholder="xxxxxx" required>
-          <label class="form-label" for="password">Password</label>
-        </div>
+        @include('template.form.floating', [
+            'type' => 'password',
+            'id' => 'password',
+            'name' => 'password',
+            'label' => 'Password',
+            'value' => '',
+            'class' => null,
+            'extra' => ['input' => 'required'],
+        ])
 
         <hr />
 

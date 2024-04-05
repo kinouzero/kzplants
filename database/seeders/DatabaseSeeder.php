@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Checklist;
+use App\Models\Dashboard;
 use App\Models\Item;
 use App\Models\Plant;
 use App\Models\Preference;
@@ -24,9 +25,9 @@ class DatabaseSeeder extends Seeder {
 
     // User admin
     $user = User::factory()->create([
-      'name' => 'User',
-      'email' => 'test@exemple.com',
-      'password' => Hash::make('test'),
+      'name' => env('SEEDER_USER_NAME', 'User 1'),
+      'email' => env('SEEDER_USER_MAIL', 'email@example.com'),
+      'password' => Hash::make(env('SEEDER_USER_PWD', 'user')),
     ]);
 
     // Roles
@@ -155,9 +156,14 @@ class DatabaseSeeder extends Seeder {
 
     // Items
     $items = [];
-    for ($i = 1; $i <= 8; $i++) {
+    for ($i = 1; $i <= 4; $i++) {
       foreach ([
         $checklistGrowth, $checklistFlower8w, $checklistFlower9w, $checklistFlower10w, $checklistFlower11w, $checklistFlower12w,
+      ] as $checklist) $items[$checklist->id][$i] = Item::create(['name' => sprintf('Week %d', $i), 'parent_id' => $i > 1 ? $items[$checklist->id][$i - 1]->id : null, 'checklist_id' => $checklist->id, 'statut_id' => $checklistStatut[$checklist->id]]);
+    }
+    for ($i; $i <= 8; $i++) {
+      foreach ([
+        $checklistFlower8w, $checklistFlower9w, $checklistFlower10w, $checklistFlower11w, $checklistFlower12w,
       ] as $checklist) $items[$checklist->id][$i] = Item::create(['name' => sprintf('Week %d', $i), 'parent_id' => $i > 1 ? $items[$checklist->id][$i - 1]->id : null, 'checklist_id' => $checklist->id, 'statut_id' => $checklistStatut[$checklist->id]]);
     }
     foreach ([
@@ -169,7 +175,7 @@ class DatabaseSeeder extends Seeder {
     foreach ([
       $checklistFlower11w, $checklistFlower12w,
     ] as $checklist) $items[$checklist->id][11] = Item::create(['name' => 'Week 11', 'parent_id' => $items[$checklist->id][10]->id,  'checklist_id' => $checklist->id, 'statut_id' => $checklistStatut[$checklist->id]]);
-    Item::create(['name' => 'Week 12', 'parent_id' => $items[$checklistFlower12w->id][11]->id, 'checklist_id' => $checklistFlower12w->id, 'statut_id' => $checklistStatut[$checklist->id]]);
+    $items[$checklistFlower12w->id][12] = Item::create(['name' => 'Week 12', 'parent_id' => $items[$checklistFlower12w->id][11]->id, 'checklist_id' => $checklistFlower12w->id, 'statut_id' => $checklistStatut[$checklist->id]]);
     $itemGerm = Item::create(['name' => 'Germinating', 'checklist_id' => $checklistGerm->id, 'statut_id' => $checklistStatut[$checklistGerm->id]]);
     Item::create(['name' => 'Potting', 'parent_id' => $itemGerm->id, 'checklist_id' => $checklistGerm->id, 'statut_id' => $checklistStatut[$checklistGerm->id]]);
     $itemHang = Item::create(['name' => 'Hanging', 'checklist_id' => $checklistHarvest->id, 'statut_id' => $checklistStatut[$checklistHarvest->id]]);
@@ -203,5 +209,19 @@ class DatabaseSeeder extends Seeder {
 
     // Plant first checklist
     $plant->checklists()->sync([$checklistGerm->id => ['initial' => true], $checklistGrowth->id => ['initial' => false], $checklistFlower8w->id => ['initial' => false], $checklistHarvest->id => ['initial' => false]]);
+
+    // Plant flush
+    $plant->items()->sync([$items[$checklistFlower8w->id][7]->id => ['flush' => true], $items[$checklistFlower8w->id][8]->id => ['flush' => true]]);
+
+    // Dashboards
+    $board1 = Dashboard::create(['name' => 'Board 1']);
+    $board2 = Dashboard::create(['name' => 'Board 2']);
+    $board3 = Dashboard::create(['name' => 'Board 3']);
+    $board4 = Dashboard::create(['name' => 'Board 4']);
+    $board1->users()->sync([$user->id, ['creator' => true, 'default' => true]]);
+    $board2->users()->sync([$user->id, ['creator' => true, 'default' => false]]);
+    $board3->users()->sync([$user->id, ['creator' => true, 'default' => false]]);
+    $board4->users()->sync([$user->id, ['creator' => true, 'default' => false]]);
+    $board1->plants()->sync([$plant->id]);
   }
 }

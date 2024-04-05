@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -8,7 +8,9 @@
 
       <hr />
 
-      @include('layouts.checklist.form', ['action' => route('checklist.update', ['id' => $checklist->id])])
+      @include('template.checklist.form', [
+          'action' => route('checklist.update', ['id' => $checklist->id]),
+      ])
 
     </div>
   </div>

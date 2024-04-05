@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use OzdemirBurak\Iris\Color\Hex;
 
 class Statut extends Model {
-  use HasFactory;
 
   protected $table = "status";
 
@@ -16,24 +14,6 @@ class Statut extends Model {
     'name',
     'color'
   ];
-
-  /**
-   * Search
-   */
-  public function search($search, $order = [], $limit = 25) {
-    $query = Property::query();
-
-    // Where
-    $query->where('status.name', 'ilike', '%' . $search . '%');
-
-    // Order
-    $query->orderBy($order['by'] ?: 'status.name', $order['dir'] ?: 'desc');
-
-    // Limit
-    $query->limit($limit);
-
-    return $query->get();
-  }
 
   /**
    * Plants

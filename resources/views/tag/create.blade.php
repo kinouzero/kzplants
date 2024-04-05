@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -8,7 +8,7 @@
 
       <hr />
 
-      @include('layouts.tag.form', ['action' => route('tag.store')])
+      @include('template.tag.form', ['action' => route('tag.store')])
 
     </div>
   </div>

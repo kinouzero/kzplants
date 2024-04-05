@@ -2,10 +2,9 @@ import './bootstrap.js';
 
 // JS
 import './dom.js';
-import './ajax.js';
 import './sidebar.js';
-import './status-chart.js';
-import './water-chart.js';
+import './chart.js';
+import './color-picker.js';
 
 // Styles
 import '../css/app.css';

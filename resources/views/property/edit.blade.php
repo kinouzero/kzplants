@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -8,7 +8,7 @@
 
       <hr />
 
-      @include('layouts.property.form', ['action' => route('property.update', ['id' => $property->id])])
+      @include('template.property.form', ['action' => route('property.update', ['id' => $property->id])])
       property
     </div>
   </div>

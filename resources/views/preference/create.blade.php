@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -8,7 +8,7 @@
 
       <hr />
 
-      @include('layouts.preference.form', ['action' => route('preference.store')])
+      @include('template.preference.form', ['action' => route('preference.store')])
 
     </div>
   </div>

@@ -9,14 +9,17 @@ function initDom(scope) {
   // Datatable
   initDatatable(scope.find('.datatable'));
 
-  // Modal link
-  initModal(scope.find('.modal-link'));
-
-  // Switch collapse
-  initSwitchCollapse(scope.find('.switch-collapse'));
+  // Switch form
+  initSwitchForm(scope.find('.switch-form'));
 
   // Btn delete
   initBtnForm(scope.find('.btn-form'));
+
+  // Input upload
+  initUpload(scope.find('.upload'));
+
+  // Masonry
+  initMasonry(scope.find('.masonry'));
 
   // Add row btn
   scope.find('.btn-add-row').click(function () {
@@ -38,15 +41,17 @@ function initDom(scope) {
 }
 
 function initSelect2(dom) {
-  dom.select2({
-    theme: 'bootstrap-5',
-    placeholder: {
-      id: '',
-      text: 'Select'
-    },
-    allowClear: true,
-    width: 'style'
-  });
+  $.each(dom, function () {
+    $(this).select2({
+      theme: 'bootstrap-5',
+      placeholder: {
+        id: '',
+        text: $(this).data('placeholder')
+      },
+      allowClear: true,
+      width: 'style'
+    });
+  })
 }
 
 function initDatatable(dom) {
@@ -67,33 +72,7 @@ function initDatatable(dom) {
   });
 }
 
-function initModal(dom) {
-  dom.click(function (event) {
-    event.preventDefault();
-    let url = this.getAttribute('href');
-
-    $.ajax({
-      url: url,
-      method: 'GET',
-      data: {
-        noLayout,
-        target: $(this).data('bs-target') || 'modal'
-      },
-      success: function (response) {
-        console.log(response);
-        $('body').append(response);
-
-        let myModal = new bootstrap.Modal($(target)[0]);
-        myModal.show();
-      },
-      error: function (xhr, status, error) {
-        console.error('Erreur lors du chargement du contenu de la modal');
-      }
-    });
-  });
-}
-
-function initSwitchCollapse(dom) {
+function initSwitchForm(dom) {
   dom.change(function () {
     $($(this).data('target')).collapse('toggle');
     $($(this).data('form'))[0].submit();
@@ -103,7 +82,6 @@ function initSwitchCollapse(dom) {
 function initBtnForm(dom) {
   dom.click(function (event) {
     event.preventDefault();
-    console.log($(this).data('form'));
     $($(this).data('form'))[0].submit();
   });
 }
@@ -114,4 +92,21 @@ function addRow(dom) {
   newRow.find('select').addClass('select2');
   dom.append(newRow);
   initSelect2(newRow.find('.select2'));
+}
+
+function initMasonry(dom) {
+  let grid = dom.masonry({
+    percentPosition: true
+  });
+
+  grid
+    .on('click', '[data-bs-toggle="collapse"]', function () {
+      setTimeout(function () {
+        grid.masonry('layout');
+      }, 500);
+    });
+}
+
+function initUpload(dom) {
+  dom.fileinput();
 }

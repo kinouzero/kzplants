@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.app')
 
 @section('content')
   <div class="card mx-auto">
@@ -14,7 +14,7 @@
 
       <hr />
 
-      <table class="datatable w-100" data-page-length={{ App\Models\User::getTableLength(auth()->user()) }}>
+      <table class="datatable w-100" data-page-length={{ App\Models\User::getUserTableLength(auth()->user()) }}>
         <thead>
           <tr>
             <th data-priority="1">Name</th>
@@ -32,21 +32,18 @@
                     <p class="mb-1">{{ $item->name }}</p>
                   @endforeach
                 </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="btn-group ms-auto">
-                      <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
-                        href="{{ route('checklist.edit', ['id' => $checklist->id]) }}"><i
-                          class="fas fa-pencil-alt"></i></a>
-                      <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
-                        data-form="#delete-list-{{ $checklist->id }}"><i class="far fa-trash-alt"></i></a>
-                    </div>
-                    <form id="delete-list-{{ $checklist->id }}"
-                      action="{{ route('checklist.destroy', ['id' => $checklist->id]) }}" method="POST">
-                      @csrf
-                      @method('DELETE')
-                    </form>
+                <td class="text-end">
+                  <div class="btn-group">
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
+                      href="{{ route('checklist.edit', ['id' => $checklist->id]) }}"><i class="fas fa-pencil-alt"></i></a>
+                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
+                      data-form="#delete-list-{{ $checklist->id }}"><i class="far fa-trash-alt"></i></a>
                   </div>
+                  <form id="delete-list-{{ $checklist->id }}"
+                    action="{{ route('checklist.destroy', ['id' => $checklist->id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                  </form>
                 </td>
               </tr>
             @endforeach

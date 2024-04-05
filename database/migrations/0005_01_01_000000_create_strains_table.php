@@ -18,6 +18,7 @@ return new class extends Migration {
     Schema::create('strain_pictures', function (Blueprint $table) {
       $table->foreignId('strain_id')->constrained('strains')->onUpdate('cascade')->onDelete('cascade');
       $table->foreignId('picture_id')->constrained('pictures')->onUpdate('cascade')->onDelete('cascade');
+      $table->boolean('default')->defaut(false);
       $table->primary(['strain_id', 'picture_id']);
     });
 
