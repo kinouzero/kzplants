@@ -19,4 +19,4 @@ RUN npm i
 RUN npm run build
 RUN rm -rf public/npm && ln -s ../node_modules public/npm
 
-LABEL "org.opencontainers.image.version"="0.0.0"
+LABEL "org.opencontainers.image.version"="0.0.1"
