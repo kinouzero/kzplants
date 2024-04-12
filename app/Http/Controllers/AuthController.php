@@ -10,7 +10,7 @@ class AuthController extends Controller {
    * Login
    */
   public function login(Request $request) {
-    if (auth()->attempt($request->only('email', 'password'))) return redirect()->intended('/');
+    if (auth()->attempt($request->only('email', 'password'), $request->boolean('remember_me'))) return redirect()->intended('/');
 
     return redirect()->back()->withInput()->withErrors(['email' => 'Email ou mot de passe incorrect.']);
   }

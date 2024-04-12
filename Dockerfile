@@ -2,10 +2,11 @@ FROM serversideup/php:beta-8.3-fpm-nginx
 
 WORKDIR /var/www/html
 
-COPY . .
+ARG PUID
+ARG PGID
+RUN docker-php-serversideup-set-id www-data ${PUID} ${PGID}
 
-# Aditionnal scripts
-COPY --chmod=755 ./entrypoint.d/ /etc/entrypoint.d/
+COPY --chown=www-data:www-data . .
 
 # Install nodejs
 RUN curl -sL https://deb.nodesource.com/setup_21.x | bash -

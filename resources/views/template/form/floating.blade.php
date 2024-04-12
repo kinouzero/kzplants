@@ -1,5 +1,5 @@
 <div class="form-floating {{ isset($class['parent']) ? $class['parent'] : '' }}"
-  {{ isset($extra['parent']) ? $extra['parent'] : '' }}>
+     {{ isset($extra['parent']) ? $extra['parent'] : '' }}>
   @if ($type === 'select')
     @include('template.form.select', [
         'class' => isset($class['input']) ? $class['input'] : '',
@@ -31,4 +31,5 @@
       'id' => $id,
       'label' => $label,
   ])
+  @include('template.form.error', ['key' => $name])
 </div>

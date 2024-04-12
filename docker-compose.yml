@@ -4,6 +4,8 @@ services:
     build:
       context: .
     environment:
+      - PUID=1000
+      - PGID=1000
       - AUTORUN_ENABLED=true
     ports:
       - 80:80
