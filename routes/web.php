@@ -32,10 +32,10 @@ Route::get('/logout', function () {
 
 // Auth
 Route::controller(AuthController::class)->group(function () {
-  Route::post('/login', 'login')->middleware('throttle:10,1');
-  Route::get('/login/oidc', 'oidcRedirect')->name('login.oidc');
-  Route::get('/login/oidc/callback', 'oidcCallback')->name('login.oidc.callback');
-  Route::post('/logout', 'logout');
+    Route::post('/login', 'login')->middleware('throttle:10,1');
+    Route::get('/login/oidc', 'oidcRedirect')->name('login.oidc');
+    Route::get('/login/oidc/callback', 'oidcCallback')->name('login.oidc.callback');
+    Route::post('/logout', 'logout');
 });
 
 // Healthcheck

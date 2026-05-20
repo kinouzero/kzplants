@@ -5,9 +5,6 @@ namespace App\Models;
 use App\Models\Pivots\PlantItem;
 use App\Models\Pivots\PlantProperty;
 use App\Models\Pivots\PlantStage;
-use App\Models\Preference;
-use App\Models\PlantHistory;
-use App\Models\Stage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -259,6 +256,7 @@ class Plant extends Model
         foreach ($stages as $stage) {
             if (! $stage->checklist) {
                 $offsetDays += max(0, (int) $stage->interval_stage_days);
+
                 continue;
             }
 

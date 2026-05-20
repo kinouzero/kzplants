@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -46,7 +46,7 @@ return new class extends Migration
             $mapping = DB::table('stages')->pluck('id', 'checklist_id');
             $rows = DB::table('plant_checklists')->get();
             foreach ($rows as $row) {
-                if (!isset($mapping[$row->checklist_id])) {
+                if (! isset($mapping[$row->checklist_id])) {
                     continue;
                 }
                 DB::table('plant_stages')->insert([

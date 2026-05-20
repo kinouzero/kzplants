@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Notification;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -15,7 +16,7 @@ class NotificationConfigTest extends TestCase
     {
         $user = User::factory()->create();
         $other = User::factory()->create();
-        $adminRole = \App\Models\Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $user->roles()->attach($adminRole->id);
 
         $payload = [
