@@ -34,6 +34,7 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     freetype-dev \
     libzip-dev \
+    postgresql-dev \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j"$(nproc)" pdo_pgsql pdo_mysql zip gd \
   && rm -rf /var/cache/apk/*
