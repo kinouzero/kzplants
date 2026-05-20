@@ -24,7 +24,9 @@
     <script src="/npm/select2/dist/js/select2.full.min.js"></script>
     <script src="/npm/select2/dist/js/i18n/{{ app()->getLocale() }}.js"></script>
     <script src="/npm/masonry-layout/dist/masonry.pkgd.min.js"></script>
-    @vite('resources/js/app.js')
+    @if (!app()->environment('testing'))
+      @vite('resources/js/app.js')
+    @endif
 
     <!-- Styles -->
     <link href="/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">

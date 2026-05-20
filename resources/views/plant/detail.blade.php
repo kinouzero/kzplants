@@ -39,7 +39,7 @@
 
               <h4 class="d-flex align-items-center">
                 <i class="fas fa-droplet fa-xs me-2"></i>
-                <span>Next watering</span>
+                <span>{{ __('ui.next_watering') }}</span>
               </h4>
 
               <hr />
@@ -48,16 +48,16 @@
                 <p class="d-flex align-items-center mb-0">
                   <i
                     class="fas fa-{{ $plant->nextWateringChemical() ? 'biohazard text-danger' : 'water text-primary' }}"></i>
-                  <span class="ms-2">With{{ $plant->nextWateringChemical() ? '' : 'out' }} chemical</span>
+                  <span class="ms-2">{{ $plant->nextWateringChemical() ? __('ui.with_chemical') : __('ui.without_chemical') }}</span>
                 </p>
                 <a href="#"
                   class="btn btn-outline-{{ !$plant->nextWateringChemical() ? 'primary' : 'secondary' }} btn-form ms-auto"
-                  data-form="#water-wo-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Without chemical">
+                  data-form="#water-wo-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('ui.without_chemical') }}">
                   <i class="fas fa-water"></i>
                 </a>
                 <a href="#"
                   class="btn btn-outline-{{ $plant->nextWateringChemical() ? 'danger' : 'secondary' }} btn-form ms-1"
-                  data-form="#water-w-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="With chemical">
+                  data-form="#water-w-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('ui.with_chemical') }}">
                   <i class="fas fa-biohazard"></i>
                 </a>
                 <form id="water-wo-chem" action="{{ route('water', ['id' => $plant->id]) }}" method="POST">
@@ -81,16 +81,16 @@
 
               <h4 class="d-flex align-items-center">
                 <i class="fas fa-list-check fa-xs me-2"></i>
-                <span>Checklists</span>
-                <a class="btn btn-outline-secondary ms-auto" title="Add" data-bs-toggle="tooltip"
-                  data-bs-placement="left" href="{{ route('plant.checklists', ['id' => $plant->id]) }}">
+                <span>{{ __('app.stages') }}</span>
+                <a class="btn btn-outline-secondary ms-auto" title="{{ __('ui.add') }}" data-bs-toggle="tooltip"
+                  data-bs-placement="left" href="{{ route('plant.stages', ['id' => $plant->id]) }}">
                   <i class="fas fa-plus"></i>
                 </a>
               </h4>
 
               <hr />
 
-              {!! $plant->templateChecklists() !!}
+              <x-plant-checklists :plant="$plant" />
 
             </div>
           </div>
@@ -107,9 +107,9 @@
                 @csrf
                 <h4 class="d-flex align-items-center">
                   <i class="fas fa-comment fa-xs me-2"></i>
-                  <span>New comment</span>
+                  <span>{{ __('ui.new_comment') }}</span>
 
-                  <button type="submit" class="btn btn-outline-success ms-auto" data-bs-toggle="tooltip" title="Save"
+                  <button type="submit" class="btn btn-outline-success ms-auto" data-bs-toggle="tooltip" title="{{ __('ui.save') }}"
                     data-bs-placement="left">
                     <i class="far fa-save"></i>
                   </button>
@@ -140,7 +140,7 @@
           <div class="card mb-3">
             <div class="card-body">
 
-              <h4><i class="far fa-square-poll-horizontal me-2"></i>Details</h4>
+              <h4><i class="far fa-square-poll-horizontal me-2"></i>{{ __('ui.details_section') }}</h4>
 
               <hr />
 
@@ -149,8 +149,8 @@
 
                   <h5 class="d-flex flex-nowrap align-items-center">
                     <i class="fas fa-tags fa-xs me-2"></i>
-                    <span>Tags</span>
-                    <a class="btn btn-outline-secondary ms-auto" title="Add" data-bs-toggle="tooltip"
+                    <span>{{ __('app.tags') }}</span>
+                    <a class="btn btn-outline-secondary ms-auto" title="{{ __('ui.add') }}" data-bs-toggle="tooltip"
                       data-bs-placement="left" href="{{ route('plant.edit', ['id' => $plant->id]) }}">
                       <i class="fas fa-plus"></i>
                     </a>
@@ -158,7 +158,7 @@
 
                   <hr />
 
-                  {!! $plant->templateTags() !!}
+                  <x-plant-tags :plant="$plant" />
 
                 </div>
               </div>
@@ -168,8 +168,8 @@
 
                   <h5 class="d-flex flex-nowrap align-items-center">
                     <i class="fas fa-sitemap fa-xs me-2"></i>
-                    <span>Properties</span>
-                    <a class="btn btn-outline-secondary ms-auto" title="Add" data-bs-toggle="tooltip"
+                    <span>{{ __('app.properties') }}</span>
+                    <a class="btn btn-outline-secondary ms-auto" title="{{ __('ui.add') }}" data-bs-toggle="tooltip"
                       data-bs-placement="left" href="{{ route('plant.edit', ['id' => $plant->id]) }}">
                       <i class="fas fa-plus"></i>
                     </a>
@@ -177,7 +177,7 @@
 
                   <hr />
 
-                  {!! $plant->templateProperties() !!}
+                  <x-plant-properties :plant="$plant" />
 
                 </div>
               </div>
@@ -201,7 +201,7 @@
               <hr />
               <div class="overflow-auto" style="max-height: 25rem">
 
-                {!! $plant->templateTimeline() !!}
+                <x-plant-timeline :plant="$plant" />
 
               </div>
             </div>
@@ -216,24 +216,4 @@
 
   @include('template.picture.gallery', ['object' => $plant, 'class' => ''])
 
-  <script>
-    $('.comment-edit').click(function() {
-      $(this).toggleClass('btn-outline-secondary btn-outline-danger').find('i').toggleClass('fa-pencil-alt fa-times')
-      $(this).closest('.comment-actions').find('.comment-save').toggleClass('d-none');
-
-      let commentId = $(this).closest('form').find('input[name="comment_id"]').val()
-      let commentDom = $(this).closest('.card').find('.comment-value');
-
-      if ($(this).hasClass('btn-outline-danger')) {
-        let commentValue = commentDom.html();
-        commentDom.html(
-          '<div class="form-floating"><textarea class="form-control" required style="height:8rem" name="comment" id="comment-' +
-          commentId + '">' + commentValue + '</textarea><label for="comment-' + commentId +
-          '">Comment</label></div>')
-      } else {
-        let commentValue = commentDom.find('textarea').html();
-        commentDom.html(commentValue)
-      }
-    });
-  </script>
 @endsection

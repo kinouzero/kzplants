@@ -2,64 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
-use App\Models\Tag;
+class TagController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Tag::class);
+        $tags = Tag::all();
 
-class TagController extends Controller {
+        return view('tag.index', compact('tags'));
+    }
 
-  // Views
-  public function index() {
-    $tags = Tag::all();
+    public function create()
+    {
+        $this->authorize('create', Tag::class);
+        $tag = null;
 
-    return view('tag.index', compact('tags'));
-  }
+        $title = __('ui.create_new', ['item' => __('ui.tag')]);
 
-  public function create() {
-    $tag = null;
+        return view('tag.edit', compact('tag', 'title'));
+    }
 
-    $title = 'Create new tag';
+    public function edit($id)
+    {
+        $tag = Tag::findOrFail($id);
+        $this->authorize('update', $tag);
 
-    return view('tag.edit', compact('tag', 'title'));
-  }
+        $title = __('ui.edit_item', ['item' => __('ui.tag'), 'name' => $tag->name]);
 
-  public function edit($id) {
-    $tag = Tag::findOrFail($id);
+        return view('tag.edit', compact('tag', 'title'));
+    }
 
-    $title = sprintf('Edit tag: %s', $tag->name);
+    public function detail($id)
+    {
+        $tag = Tag::findOrFail($id);
+        $this->authorize('view', $tag);
 
-    return view('tag.edit', compact('tag', 'title'));
-  }
+        return view('tag.detail', compact('tag'));
+    }
 
-  public function detail($id) {
-    $tag = Tag::findOrFail($id);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Tag::class);
+        $tag = new Tag;
 
-    return view('tag.detail', compact('tag'));
-  }
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'color' => 'required|string',
+        ]);
 
-  // Actions
-  public function store(Request $request) {
-    $tag = new Tag();
+        $tag->fill($validatedData)->save();
 
-    $validatedData = $request->validate(['name' => 'required|string']);
+        return back()->with('success', __('ui.created_success', ['item' => __('ui.tag')]));
+    }
 
-    $tag->name = $validatedData['name'];
-    $tag->save();
+    public function update(Request $request, $id)
+    {
+        $tag = Tag::findOrFail($id);
+        $this->authorize('update', $tag);
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'color' => 'required|string',
+        ]);
+        $tag->update($validatedData);
 
-    return back()->with('success', 'Tag created successfully.');
-  }
+        return back()->with('success', __('ui.updated_success', ['item' => __('ui.tag')]));
+    }
 
-  public function update(Request $request, $id) {
-    $tag = Tag::findOrFail($id);
-    $tag->update($request->all());
+    public function destroy($id)
+    {
+        $tag = Tag::findOrFail($id);
+        $this->authorize('delete', $tag);
+        $tag->delete();
 
-    return back()->with('success', 'Tag updated successfully.');
-  }
-
-  public function destroy($id) {
-    $tag = Tag::findOrFail($id);
-    $tag->delete();
-
-    return back()->with('success', 'Tag deleted successfully.');
-  }
+        return back()->with('success', __('ui.deleted_success', ['item' => __('ui.tag')]));
+    }
 }

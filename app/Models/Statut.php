@@ -2,41 +2,51 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 use OzdemirBurak\Iris\Color\Hex;
 
-class Statut extends Model {
+class Statut extends Model
+{
+    use HasFactory;
 
-  protected $table = "status";
+    protected $table = 'status';
 
-  protected $fillable = [
-    'name',
-    'color'
-  ];
+    protected $fillable = [
+        'name',
+        'color',
+    ];
 
-  /**
-   * Plants
-   */
-  public function plants() {
-    return $this->hasMany(Plant::class);
-  }
+    /**
+     * Plants
+     */
+    public function plants()
+    {
+        return $this->hasMany(Plant::class);
+    }
 
-  public function rgb() {
-    $color = new Hex($this->color);
-    return $color->toRgb();
-  }
+    public function rgb()
+    {
+        $color = new Hex($this->color);
 
-  /**
-   * Get plant statut for update
-   */
-  public static function getStatut($plant) {
-    $current = $plant->currentChecklist();
+        return $color->toRgb();
+    }
 
-    if (!($first = $plant->firstChecklist()) || ($first->id === $current->id && $first->isStarted($plant)) || !($item = $plant->currentItem())) $statut = Statut::where('name', 'ilike', 'new')->first();
-    elseif (($last = $plant->lastChecklist())->id === $current->id && $last->isCompleted()) $statut = Statut::where('id', 'ilike', 'ready')->first();
-    else $statut = Statut::where('id', $item->statut_id)->first();
+    /**
+     * Get plant statut for update
+     */
+    public static function getStatut($plant)
+    {
+        $current = $plant->currentChecklist();
 
-    return $statut;
-  }
+        if (! ($firstStage = $plant->firstStage()) || ($current && $firstStage->checklist && $current->id === $firstStage->checklist->id && $current->isStarted($plant)) || ! ($item = $plant->currentItem())) {
+            $statut = Statut::whereRaw('LOWER(name) = ?', ['new'])->first();
+        } elseif (($last = $plant->lastChecklist()) && $current && $last->id === $current->id && $last->isCompleted($plant)) {
+            $statut = Statut::whereRaw('LOWER(name) = ?', ['ready'])->first();
+        } else {
+            $statut = Statut::where('id', $item->statut_id)->first();
+        }
+
+        return $statut;
+    }
 }

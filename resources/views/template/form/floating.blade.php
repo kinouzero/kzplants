@@ -25,6 +25,15 @@
         'value' => $value,
         'extra' => isset($extra['input']) ? $extra['input'] : '',
     ])
+  @else
+    @include('template.form.input', [
+        'type' => $type,
+        'class' => isset($class['input']) ? $class['input'] : '',
+        'id' => $id,
+        'name' => $name,
+        'value' => $value ?? null,
+        'extra' => isset($extra['input']) ? $extra['input'] : '',
+    ])
   @endif
   @include('template.form.label', [
       'class' => isset($class['label']) ? $class['label'] : '',

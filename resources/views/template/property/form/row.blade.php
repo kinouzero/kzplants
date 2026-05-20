@@ -6,7 +6,7 @@
         'id' => sprintf('properties-%s', $id ?: 'uid'),
         'name' => sprintf('properties[%s]', $id ?: 'uid'),
         'label' => 'Property',
-        'placeholder' => 'Select property',
+      'placeholder' => __('ui.select_property'),
         'options' => implode('', $options),
         'class' => $id ? ['input' => 'select2'] : null,
         'extra' => null,

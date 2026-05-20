@@ -2,64 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 
-use App\Models\Property;
+class PropertyController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Property::class);
+        $properties = Property::all();
 
-class PropertyController extends Controller {
+        return view('property.index', compact('properties'));
+    }
 
-  // Views
-  public function index() {
-    $properties = Property::all();
+    public function create()
+    {
+        $this->authorize('create', Property::class);
+        $property = null;
 
-    return view('property.index', compact('properties'));
-  }
+        $title = __('ui.create_new', ['item' => __('ui.property')]);
 
-  public function create() {
-    $property = null;
+        return view('property.edit', compact('property', 'title'));
+    }
 
-    $title = 'Create new property';
+    public function edit($id)
+    {
+        $property = Property::findOrFail($id);
+        $this->authorize('update', $property);
 
-    return view('property.edit', compact('property', 'title'));
-  }
+        $title = __('ui.edit_item', ['item' => __('ui.property'), 'name' => $property->name]);
 
-  public function edit($id) {
-    $property = Property::findOrFail($id);
+        return view('property.edit', compact('property', 'title'));
+    }
 
-    $title = sprintf('Edit property: %s', $property->name);
+    public function detail($id)
+    {
+        $property = Property::findOrFail($id);
+        $this->authorize('view', $property);
 
-    return view('property.edit', compact('property', 'title'));
-  }
+        return view('property.detail', compact('property'));
+    }
 
-  public function detail($id) {
-    $property = Property::findOrFail($id);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Property::class);
+        $property = new Property;
 
-    return view('property.detail', compact('property'));
-  }
+        $validatedData = $request->validate(['name' => 'required|string']);
 
-  // Actions
-  public function store(Request $request) {
-    $property = new Property();
+        $property->name = $validatedData['name'];
+        $property->save();
 
-    $validatedData = $request->validate(['name' => 'required|string']);
+        return back()->with('success', __('ui.created_success', ['item' => __('ui.property')]));
+    }
 
-    $property->name = $validatedData['name'];
-    $property->save();
+    public function update(Request $request, $id)
+    {
+        $property = Property::findOrFail($id);
+        $this->authorize('update', $property);
+        $validatedData = $request->validate(['name' => 'required|string']);
+        $property->update($validatedData);
 
-    return back()->with('success', 'Property created successfully.');
-  }
+        return back()->with('success', __('ui.updated_success', ['item' => __('ui.property')]));
+    }
 
-  public function update(Request $request, $id) {
-    $property = Property::findOrFail($id);
-    $property->update($request->all());
+    public function destroy($id)
+    {
+        $property = Property::findOrFail($id);
+        $this->authorize('delete', $property);
+        $property->delete();
 
-    return back()->with('success', 'Property updated successfully.');
-  }
-
-  public function destroy($id) {
-    $property = Property::findOrFail($id);
-    $property->delete();
-
-    return back()->with('success', 'Property deleted successfully.');
-  }
+        return back()->with('success', __('ui.deleted_success', ['item' => __('ui.property')]));
+    }
 }

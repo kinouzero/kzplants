@@ -7,11 +7,11 @@
     <div class="card-body">
 
       <h1 class="d-flex text-center align-items-center">
-        <i class="fas fa-cannabis fa-2xs me-2"></i>Plants
+        <i class="fas fa-cannabis fa-2xs me-2"></i>{{ __('app.plants') }}
         <div class="ms-auto d-flex align-items-center"
-          @if ($strains->count() === 0) title="Create a strain to start" data-bs-toggle="tooltip" data-bs-placement="left" @endif>
+          @if ($strains->count() === 0) title="{{ __('ui.create_strain_to_start') }}" data-bs-toggle="tooltip" data-bs-placement="left" @endif>
           <a class="btn btn-outline-secondary {{ $strains->count() === 0 ? 'disabled' : '' }}"
-            href="{{ route('plant.create') }}" title="Create" data-bs-toggle="tooltip" data-bs-placement="left"><i
+            href="{{ route('plant.create') }}" title="{{ __('ui.create') }}" data-bs-toggle="tooltip" data-bs-placement="left"><i
               class="fas fa-plus"></i></a>
         </div>
       </h1>
@@ -21,12 +21,12 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getUserTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Strain</th>
-            <th>Dashboards</th>
-            <th>Tags</th>
-            <th>Properties</th>
-            <th class="text-end">Actions</th>
+            <th>{{ __('ui.name') }}</th>
+            <th>{{ __('ui.strain') }}</th>
+            <th>{{ __('app.dashboards') }}</th>
+            <th>{{ __('app.tags') }}</th>
+            <th>{{ __('app.properties') }}</th>
+            <th class="text-end">{{ __('ui.actions') }}</th>
           </tr>
         </thead>
         @if ($plants)
@@ -52,22 +52,22 @@
                   @endforeach
                 </td>
                 <td>
-                  {!! $plant->templateTags() !!}
+                  <x-plant-tags :plant="$plant" />
                 </td>
                 <td>
-                  {!! $plant->templateProperties() !!}
+                  <x-plant-properties :plant="$plant" />
                 </td>
                 <td class="text-end">
                   <div class="btn-group">
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Details"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.details') }}"
                       href="{{ route('plant.detail', ['id' => $plant->id]) }}"><i class="fas fa-info-circle"></i></a>
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.edit') }}"
                       href="{{ route('plant.edit', ['id' => $plant->id]) }}"><i class="fas fa-pencil-alt"></i></a>
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Checklists"
-                      href="{{ route('plant.checklists', ['id' => $plant->id]) }}"><i class="fas fa-list-check"></i></a>
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Pictures"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('app.stages') }}"
+                      href="{{ route('plant.stages', ['id' => $plant->id]) }}"><i class="fas fa-list-check"></i></a>
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.pictures') }}"
                       href="{{ route('plant.pictures', ['id' => $plant->id]) }}"><i class="far fa-images"></i></a>
-                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
+                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="{{ __('ui.delete') }}" href="#"
                       data-form="#delete-plant-{{ $plant->id }}"><i class="far fa-trash-alt"></i></a>
                   </div>
                   <form id="delete-plant-{{ $plant->id }}"

@@ -1,7 +1,7 @@
 <div class="card h-100">
   <div class="card-body pb-0">
 
-    <h2 class="text-center"><i class="fas fa-droplet fa-2xs me-2"></i>Watering</h2>
+    <h2 class="text-center"><i class="fas fa-droplet fa-2xs me-2"></i>{{ __('app.watering') }}</h2>
 
     <hr />
 
@@ -9,13 +9,13 @@
       @include('template.alert', [
           'color' => 'secondary',
           'class' => 'text-center',
-          'content' => 'No watering yet',
+          'content' => __('ui.no_watering_yet'),
       ])
     @else
       <div style="card mb-3">
         <div class="card-body">
           <canvas id="waterings" class="chart" data-url="{{ route('chart', ['type' => 'watering']) }}"
-            data-title="Watering" data-empty-color="#000"></canvas>
+            data-title="{{ __('app.watering') }}" data-empty-color="#000"></canvas>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
                   <a href="#"
                     class="btn btn-outline-{{ !$plant->nextWateringChemical() ? 'primary' : 'secondary' }} btn-form flex-fill me-1"
                     data-form="#water-wo-chem" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    title="Without chemical">
+                    title="{{ __('ui.without_chemical') }}">
                     <i class="fas fa-water"></i>
                   </a>
                   <form id="water-w-chem" action="{{ route('water.chem', ['id' => $plant->id]) }}" method="POST">
@@ -71,7 +71,7 @@
                   </form>
                   <a href="#"
                     class="btn btn-outline-{{ $plant->nextWateringChemical() ? 'danger' : 'secondary' }} btn-form flex-fill ms-1"
-                    data-form="#water-w-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="With chemical">
+                    data-form="#water-w-chem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ __('ui.with_chemical') }}">
                     <i class="fas fa-biohazard"></i>
                   </a>
                 </div>

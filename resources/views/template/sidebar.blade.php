@@ -31,7 +31,7 @@
           </div>
         </div>
       </a>
-      <a href="#" class="btn-form" data-bs-toggle="tooltip" title="Deconnexion" data-bs-placement="right"
+      <a href="#" class="btn-form" data-bs-toggle="tooltip" title="{{ __('app.logout') }}" data-bs-placement="right"
         data-form="#logout-form">
         <i class="fas fa-arrow-right-from-bracket"></i>
       </a>
@@ -46,90 +46,97 @@
         <li class="primary d-flex align-items-center {{ Route::current()->getName() === 'dashboard' ? 'active' : '' }}">
           <a href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span>
+            <span>{{ __('app.dashboard') }}</span>
           </a>
           @if (Route::current()->getName() === 'dashboard')
             <span class="text-secondary ms-auto me-3" data-bs-toggle="modal" data-bs-target="#switch-dashboard"
               role="button">
               <i class="fas fa-arrows-rotate" data-bs-toggle="tooltip" data-bs-placement="right"
-                title="Switch dashboard"></i>
+                title="{{ __('app.switch_dashboard') }}"></i>
             </span>
           @endif
         </li>
 
-        <li class="header-menu sidebar-item">Manage</li>
+        <li class="primary {{ Route::current()->getName() === 'dashboard.today' ? 'active' : '' }}">
+          <a href="{{ route('dashboard.today') }}">
+            <i class="fas fa-fw fa-calendar-day"></i>
+            <span>{{ __('app.today') }}</span>
+          </a>
+        </li>
+
+        <li class="header-menu sidebar-item">{{ __('app.manage') }}</li>
 
         <li class="success {{ Str::contains(Route::current()->getName(), 'dashboard.') ? 'active' : '' }}">
           <a href="{{ route('dashboard.index') }}">
             <i class="fas fa-fw fa-table-columns"></i>
-            <span>Dashboards</span>
+            <span>{{ __('app.dashboards') }}</span>
           </a>
         </li>
 
         <li class="success {{ Str::contains(Route::current()->getName(), 'plant.') ? 'active' : '' }}">
           <a href="{{ route('plant.index') }}">
             <i class="fas fa-fw fa-cannabis"></i>
-            <span>Plants</span>
+            <span>{{ __('app.plants') }}</span>
           </a>
         </li>
 
         <li class="success {{ Str::contains(Route::current()->getName(), 'strain.') ? 'active' : '' }}">
           <a href="{{ route('strain.index') }}">
             <i class="fas fa-fw fa-seedling"></i>
-            <span>Strains</span>
+            <span>{{ __('app.strains') }}</span>
           </a>
         </li>
 
         <li class="success {{ Str::contains(Route::current()->getName(), 'notification.') ? 'active' : '' }}">
           <a href="{{ route('notification.index') }}">
             <i class="fas fa-fw fa-bell"></i>
-            <span>Notifications</span>
+            <span>{{ __('app.notifications') }}</span>
           </a>
         </li>
 
         @if (auth()->user()->isAdmin())
-          <li class="header-menu sidebar-item">Admin</li>
+          <li class="header-menu sidebar-item">{{ __('app.admin') }}</li>
 
           <li class="danger {{ Str::contains(Route::current()->getName(), 'statut.') ? 'active' : '' }}">
             <a href="{{ route('statut.index') }}">
               <i class="fas fa-fw fa-list-ul"></i>
-              <span>Status</span>
+              <span>{{ __('app.status') }}</span>
             </a>
           </li>
 
           <li class="danger {{ Str::contains(Route::current()->getName(), 'tag.') ? 'active' : '' }}">
             <a href="{{ route('tag.index') }}">
               <i class="fas fa-fw fa-tags"></i>
-              <span>Tags</span>
+              <span>{{ __('app.tags') }}</span>
             </a>
           </li>
 
           <li class="danger {{ Str::contains(Route::current()->getName(), 'property.') ? 'active' : '' }}">
             <a href="{{ route('property.index') }}">
               <i class="fas fa-fw fa-sitemap"></i>
-              <span>Properties</span>
+              <span>{{ __('app.properties') }}</span>
             </a>
           </li>
 
           <li
-            class="dropdown danger sidebar-dropdown {{ Str::contains(Route::current()->getName(), 'checklist.') || Str::contains(Route::current()->getName(), 'item.') ? 'active' : '' }}">
+            class="dropdown danger sidebar-dropdown {{ Str::contains(Route::current()->getName(), 'item.') || Str::contains(Route::current()->getName(), 'stage.') ? 'active' : '' }}">
             <a href="#">
               <i class="fas fa-fw fa-list-check"></i>
-              <span>Checklists</span>
+              <span>{{ __('app.stages') }}</span>
             </a>
             <div class="sidebar-submenu"
-              style="display:{{ Str::contains(Route::current()->getName(), 'checklist.') || Str::contains(Route::current()->getName(), 'item.') ? 'block' : 'none' }}">
+              style="display:{{ Str::contains(Route::current()->getName(), 'item.') || Str::contains(Route::current()->getName(), 'stage.') ? 'block' : 'none' }}">
               <ul class="p-0">
-                <li class="danger {{ Str::contains(Route::current()->getName(), 'checklist.') ? 'active' : '' }}">
-                  <a href="{{ route('checklist.index') }}">
-                    <i class="fas fa-fw fa-list-check"></i>
-                    <span>Checklists</span>
+                <li class="danger {{ Str::contains(Route::current()->getName(), 'stage.') ? 'active' : '' }}">
+                  <a href="{{ route('stage.index') }}">
+                    <i class="fas fa-fw fa-layer-group"></i>
+                    <span>{{ __('app.stages') }}</span>
                   </a>
                 </li>
                 <li class="danger {{ Str::contains(Route::current()->getName(), 'item.') ? 'active' : '' }}">
                   <a href="{{ route('item.index') }}">
                     <i class="fas fa-fw fa-check"></i>
-                    <span>Items</span>
+                    <span>{{ __('app.items') }}</span>
                   </a>
                 </li>
               </ul>
@@ -140,7 +147,7 @@
             class="dropdown danger sidebar-dropdown {{ Str::contains(Route::current()->getName(), 'user.') || Str::contains(Route::current()->getName(), 'preference.') ? 'active' : '' }}">
             <a href="#">
               <i class="fas fa-fw fa-users"></i>
-              <span>Users</span>
+              <span>{{ __('app.users') }}</span>
             </a>
             <div class="sidebar-submenu"
               style="display:{{ Str::contains(Route::current()->getName(), 'user.') || Str::contains(Route::current()->getName(), 'preference.') ? 'block' : 'none' }}">
@@ -148,13 +155,13 @@
                 <li class="danger {{ Str::contains(Route::current()->getName(), 'user.') ? 'active' : '' }}">
                   <a href="{{ route('user.index') }}">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Users</span>
+                    <span>{{ __('app.users') }}</span>
                   </a>
                 </li>
                 <li class="danger {{ Str::contains(Route::current()->getName(), 'preference.') ? 'active' : '' }}">
                   <a href="{{ route('preference.index') }}">
                     <i class="fas fa-fw fa-check"></i>
-                    <span>Preferences</span>
+                    <span>{{ __('app.preferences') }}</span>
                   </a>
                 </li>
               </ul>
@@ -168,7 +175,7 @@
 
   <div class="sidebar-footer">
     <div class="text-white m-auto" id="toggle-theme" style="cursor: pointer" data-bs-toggle="tooltip"
-      data-bs-placement="top" title="Toggle {{ auth()->user()->getTheme() === 'light' ? 'dark' : 'light' }} mode">
+      data-bs-placement="top" title="{{ __('app.toggle_theme', ['mode' => auth()->user()->getTheme() === 'light' ? 'dark' : 'light']) }}">
       <i class="far fa-{{ auth()->user()->getTheme() === 'light' ? 'moon' : 'sun' }} m-auto"></i>
     </div>
   </div>

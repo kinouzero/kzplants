@@ -34,7 +34,7 @@
       @include('template.alert', [
           'color' => 'secondary',
           'class' => 'text-center',
-          'content' => 'No picture yet',
+          'content' => __('ui.no_picture_yet'),
       ])
     @endif
 

@@ -3,81 +3,117 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checklist;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
-use App\Models\Item;
+class ItemController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Item::class);
+        $items = Item::all();
 
-class ItemController extends Controller {
+        return view('item.index', compact('items'));
+    }
 
-  // Views
-  public function index() {
-    $items = Item::all();
+    public function create()
+    {
+        $this->authorize('create', Item::class);
+        $item = null;
+        $checklists = Checklist::all();
 
-    return view('item.index', compact('items'));
-  }
+        $title = __('ui.create_new', ['item' => __('ui.item')]);
 
-  public function create() {
-    $item       = null;
-    $checklists = Checklist::all();
+        $options_checklists = $options_parents = [];
+        foreach ($checklists as $checklist) {
+            $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => false]);
+        }
+        if ($item && $item->checklist) {
+            foreach ($item->checklist->items as $_item) {
+                if ($item && ($item->id === $_item->id || ($_item->child && $item->id !== $_item->child->id))) {
+                    $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => false]);
+                }
+            }
+        }
 
-    $title = 'Create new item';
+        return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
+    }
 
-    $options_checklists = $options_parents = [];
-    foreach ($checklists as $checklist) $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => false]);
-    if ($item && $item->checklist) foreach ($item->checklist->items as $_item) if ($item && ($item->id === $_item->id || ($_item->child && $item->id !== $_item->child->id))) $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => false]);
+    public function edit($id)
+    {
+        $item = Item::findOrFail($id);
+        $this->authorize('update', $item);
+        $checklists = Checklist::all();
 
-    return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
-  }
+        $title = __('ui.edit_item', ['item' => __('ui.item'), 'name' => $item->name]);
 
-  public function edit($id) {
-    $item       = Item::findOrFail($id);
-    $checklists = Checklist::all();
+        $options_checklists = $options_parents = [];
+        foreach ($checklists as $checklist) {
+            $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => $item->checklist->id === $checklist->id]);
+        }
+        if ($item->checklist) {
+            foreach ($item->checklist->items as $_item) {
+                if ($item->id !== $_item->id || ($_item->child && $item->id !== $_item->child->id)) {
+                    $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => $item->parent && $item->parent->id === $_item->id]);
+                }
+            }
+        }
 
-    $title = sprintf('Edit item: %s', $item->name);
+        return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
+    }
 
-    $options_checklists = $options_parents = [];
-    foreach ($checklists as $checklist) $options_checklists[] = view('template.form.select.option', ['value' => $checklist->id, 'title' => $checklist->name, 'selected' => $item->checklist->id === $checklist->id]);
-    if ($item->checklist) foreach ($item->checklist->items as $_item) if ($item->id !== $_item->id || ($_item->child && $item->id !== $_item->child->id)) $options_parents[] = view('template.form.select.option', ['value' => $_item->id, 'title' => $_item->name, 'selected' => $item->parent && $item->parent->id === $_item->id]);
+    public function detail($id)
+    {
+        $item = Item::findOrFail($id);
+        $this->authorize('view', $item);
 
-    return view('item.edit', compact('item', 'options_checklists', 'options_parents', 'title'));
-  }
+        return view('item.detail', compact('item'));
+    }
 
-  public function detail($id) {
-    $item = Item::findOrFail($id);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Item::class);
+        $item = new Item;
 
-    return view('item.detail', compact('item'));
-  }
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'checklist_id' => 'required|integer|exists:checklists,id',
+            'parent_id' => 'nullable|integer|exists:items,id',
+        ]);
 
-  // Actions
-  public function store(Request $request) {
-    $item = new Item();
+        $item->name = $validatedData['name'];
+        $item->checklist_id = $validatedData['checklist_id'];
+        if ($validatedData['parent_id']) {
+            $item->parent_id = $validatedData['parent_id'];
+        }
 
-    $validatedData = $request->validate([
-      'name'         => 'required|string',
-      'checklist_id' => 'required|integer',
-      'parent_id'    => 'integer'
-    ]);
+        $item->save();
 
-    $item->name         = $validatedData['name'];
-    $item->checklist_id = $validatedData['checklist_id'];
-    if ($validatedData['parent_id']) $item->parent_id = $validatedData['parent_id'];
+        return back()->with('success', __('ui.checklist_item_created'));
+    }
 
-    $item->save();
+    public function update(Request $request, $id)
+    {
+        $item = Item::findOrFail($id);
+        $this->authorize('update', $item);
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'checklist_id' => 'required|integer|exists:checklists,id',
+            'parent_id' => 'nullable|integer|exists:items,id',
+        ]);
+        $item->update($validatedData);
 
-    return back()->with('success', 'Checklist item created successfully.');
-  }
+        return back()->with('success', __('ui.checklist_item_updated'));
+    }
 
-  public function update(Request $request, $id) {
-    $item = Item::findOrFail($id);
-    $item->update($request->all());
+    public function destroy($id)
+    {
+        $item = Item::findOrFail($id);
+        $this->authorize('delete', $item);
+        $item->delete();
 
-    return back()->with('success', 'Checklist item updated successfully.');
-  }
-
-  public function destroy($id) {
-    $item = Item::findOrFail($id);
-    $item->delete();
-
-    return back()->with('success', 'Checklist item deleted successfully.');
-  }
+        return back()->with('success', __('ui.checklist_item_deleted'));
+    }
 }

@@ -12,7 +12,7 @@
           'type' => 'text',
           'id' => 'name',
           'name' => 'name',
-          'label' => 'Name',
+          'label' => __('ui.name'),
           'value' => $user ? $user->name : '',
           'class' => ['parent' => 'mb-3'],
           'extra' => ['input' => 'required autofocus'],
@@ -22,7 +22,7 @@
           'type' => 'email',
           'id' => 'email',
           'name' => 'email',
-          'label' => 'Email',
+          'label' => __('ui.email'),
           'value' => $user ? $user->email : '',
           'class' => auth()->user()->isAdmin() ? ['parent' => 'mb-3'] : null,
           'extra' => ['input' => 'required'],
@@ -56,7 +56,7 @@
           'type' => 'password',
           'id' => 'password',
           'name' => 'password',
-          'label' => 'Password',
+          'label' => __('ui.password'),
           'value' => '',
           'class' => ['parent' => 'mb-3'],
           'extra' => null,
@@ -64,9 +64,9 @@
 
       @include('template.form.floating', [
           'type' => 'password',
-          'id' => 'password2',
-          'name' => 'password2',
-          'label' => 'Confirm password',
+          'id' => 'password_confirmation',
+          'name' => 'password_confirmation',
+          'label' => __('ui.confirm_password'),
           'value' => '',
           'class' => null,
           'extra' => null,
@@ -78,7 +78,7 @@
   <div class="card mb-3">
     <div class="card-body last-margin-0">
 
-      <h4 class="text-center"><i class="fas fa-cogs fa-xs me-2"></i>Preferences</h4>
+      <h4 class="text-center"><i class="fas fa-cogs fa-xs me-2"></i>{{ __('ui.preferences') }}</h4>
 
       <hr />
 
@@ -90,6 +90,6 @@
   <hr />
 
   <div class="d-flex">
-    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>Save</button>
+    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>{{ __('ui.save') }}</button>
   </div>
 </form>

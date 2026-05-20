@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'login' => 'Login',
+    'logout' => 'Logout',
+    'dashboard' => 'Dashboard',
+    'today' => 'Today',
+    'manage' => 'Manage',
+    'dashboards' => 'Dashboards',
+    'plants' => 'Plants',
+    'strains' => 'Strains',
+    'notifications' => 'Notifications',
+    'admin' => 'Admin',
+    'status' => 'Status',
+    'tags' => 'Tags',
+    'properties' => 'Properties',
+    'checklists' => 'Checklists',
+    'stages' => 'Stages',
+    'items' => 'Items',
+    'users' => 'Users',
+    'preferences' => 'Preferences',
+    'switch_dashboard' => 'Switch dashboard',
+    'toggle_theme' => 'Toggle :mode mode',
+    'watering' => 'Watering',
+];

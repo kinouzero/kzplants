@@ -2,64 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Statut;
 use Illuminate\Http\Request;
 
-use App\Models\Statut;
+class StatutController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Statut::class);
+        $status = Statut::all();
 
-class StatutController extends Controller {
+        return view('statut.index', compact('status'));
+    }
 
-  // Views
-  public function index() {
-    $status = Statut::all();
+    public function create()
+    {
+        $this->authorize('create', Statut::class);
+        $statut = null;
 
-    return view('statut.index', compact('status'));
-  }
+        $title = __('ui.create_new', ['item' => __('ui.status')]);
 
-  public function create() {
-    $statut = null;
+        return view('statut.edit', compact('statut', 'title'));
+    }
 
-    $title = 'Create new statut';
+    public function edit($id)
+    {
+        $statut = Statut::findOrFail($id);
+        $this->authorize('update', $statut);
 
-    return view('statut.edit', compact('statut', 'title'));
-  }
+        $title = __('ui.edit_item', ['item' => __('ui.status'), 'name' => $statut->name]);
 
-  public function edit($id) {
-    $statut = Statut::findOrFail($id);
+        return view('statut.edit', compact('statut', 'title'));
+    }
 
-    $title = sprintf('Edit statut: %s', $statut->name);
+    public function detail($id)
+    {
+        $statut = Statut::findOrFail($id);
+        $this->authorize('view', $statut);
 
-    return view('statut.edit', compact('statut', 'title'));
-  }
+        return view('statut.detail', compact('statut'));
+    }
 
-  public function detail($id) {
-    $statut = Statut::findOrFail($id);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Statut::class);
+        $statut = new Statut;
 
-    return view('statut.detail', compact('statut'));
-  }
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'color' => 'required|string',
+        ]);
 
-  // Actions
-  public function store(Request $request) {
-    $statut = new Statut();
+        $statut->fill($validatedData)->save();
 
-    $validatedData = $request->validate(['name' => 'required|string']);
+        return back()->with('success', __('ui.created_success', ['item' => __('ui.status')]));
+    }
 
-    $statut->name = $validatedData['name'];
-    $statut->save();
+    public function update(Request $request, $id)
+    {
+        $statut = Statut::findOrFail($id);
+        $this->authorize('update', $statut);
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'color' => 'required|string',
+        ]);
+        $statut->update($validatedData);
 
-    return back()->with('success', 'Statut created successfully.');
-  }
+        return back()->with('success', __('ui.updated_success', ['item' => __('ui.status')]));
+    }
 
-  public function update(Request $request, $id) {
-    $statut = Statut::findOrFail($id);
-    $statut->update($request->all());
+    public function destroy($id)
+    {
+        $statut = Statut::findOrFail($id);
+        $this->authorize('delete', $statut);
+        $statut->delete();
 
-    return back()->with('success', 'Statut updated successfully.');
-  }
-
-  public function destroy($id) {
-    $statut = Statut::findOrFail($id);
-    $statut->delete();
-
-    return back()->with('success', 'Statut deleted successfully.');
-  }
+        return back()->with('success', __('ui.deleted_success', ['item' => __('ui.status')]));
+    }
 }

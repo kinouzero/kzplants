@@ -10,7 +10,7 @@
 
   <div class="card-body collapse {{ $active ? 'show' : '' }}" id="checklist-items-{{ $checklist->id }}">
 
-    {!! App\Models\Checklist::templateItemsTree($plant, $checklist, $page) !!}
+    {!! App\Presenters\ChecklistPresenter::templateItemsTree($plant, $checklist, $page) !!}
 
   </div>
 </div>

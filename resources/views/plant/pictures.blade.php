@@ -3,6 +3,12 @@
 @section('content')
   @include('template.picture.gallery', ['object' => $plant, 'class' => 'mb-3'])
 
+  <div class="mb-3">
+    <a class="btn btn-outline-secondary" href="{{ route('plant.compare', ['id' => $plant->id]) }}">
+      <i class="fas fa-images me-2"></i>Compare
+    </a>
+  </div>
+
   <div class="card">
     <div class="card-body pb-0">
 

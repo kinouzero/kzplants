@@ -5,9 +5,9 @@
     <div class="card-body">
 
       <h1 class="d-flex text-center align-items-center">
-        <i class="fas fa-check fa-2xs me-2"></i>Notifications
+        <i class="fas fa-check fa-2xs me-2"></i>{{ __('app.notifications') }}
         <div class="ms-auto d-flex align-items-center">
-          <a class="btn btn-outline-secondary" href="{{ route('notification.create') }}" title="Create"
+          <a class="btn btn-outline-secondary" href="{{ route('notification.create') }}" title="{{ __('ui.create') }}"
             data-bs-toggle="tooltip" data-bs-placement="left"><i class="fas fa-plus"></i></a>
         </div>
       </h1>
@@ -17,9 +17,9 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getUserTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Configuration</th>
-            <th class="text-end">Actions</th>
+            <th>{{ __('ui.name') }}</th>
+            <th>{{ __('ui.configuration') }}</th>
+            <th class="text-end">{{ __('ui.actions') }}</th>
           </tr>
         </thead>
         @if ($notifications)
@@ -30,11 +30,11 @@
                 <td>{{ var_dump($notification->config()) }}</td>
                 <td class="text-end">
                   <div class="btn-group">
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.edit') }}"
                       href="{{ route('notification.edit', ['id' => $notification->id]) }}"><i
                         class="fas fa-pencil-alt"></i></a>
                     @if ($notification->creator->id === auth()->user()->id)
-                      <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
+                      <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="{{ __('ui.delete') }}" href="#"
                         data-form="#delete-notification-{{ $notification->id }}"><i class="far fa-trash-alt"></i></a>
                     @endif
                   </div>

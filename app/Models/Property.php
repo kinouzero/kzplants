@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Property extends Model {
+class Property extends Model
+{
+    protected $table = 'properties';
 
-  protected $table = 'properties';
-
-  protected $fillable = [
-    'name'
-  ];
+    protected $fillable = [
+        'name',
+    ];
 }

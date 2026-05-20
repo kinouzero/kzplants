@@ -5,7 +5,7 @@
       'type' => 'text',
       'id' => 'name',
       'name' => 'name',
-      'label' => 'Name',
+      'label' => __('ui.name'),
       'value' => $property ? $property->name : '',
       'class' => ['parent' => 'mb-3'],
       'extra' => ['input' => 'required autofocus'],
@@ -14,6 +14,6 @@
   <hr />
 
   <div class="d-flex">
-    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>Save</button>
+    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>{{ __('ui.save') }}</button>
   </div>
 </form>

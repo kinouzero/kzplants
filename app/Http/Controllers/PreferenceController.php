@@ -2,64 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Preference;
 use Illuminate\Http\Request;
 
-use App\Models\Preference;
+class PreferenceController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Preference::class);
+        $preferences = Preference::all();
 
-class PreferenceController extends Controller {
+        return view('preference.index', compact('preferences'));
+    }
 
-  // Views
-  public function index() {
-    $preferences = Preference::all();
+    public function create()
+    {
+        $this->authorize('create', Preference::class);
+        $preference = null;
 
-    return view('preference.index', compact('preferences'));
-  }
+        $title = __('ui.create_new', ['item' => __('ui.preference')]);
 
-  public function create() {
-    $preference = null;
+        return view('preference.edit', compact('preference', 'title'));
+    }
 
-    $title = 'Create new preference';
+    public function edit($id)
+    {
+        $preference = Preference::findOrFail($id);
+        $this->authorize('update', $preference);
 
-    return view('preference.edit', compact('preference', 'title'));
-  }
+        $title = __('ui.edit_item', ['item' => __('ui.preference'), 'name' => $preference->name]);
 
-  public function edit($id) {
-    $preference = Preference::findOrFail($id);
+        return view('preference.edit', compact('preference', 'title'));
+    }
 
-    $title = sprintf('Edit preference: %s', $preference->name);
+    public function detail($id)
+    {
+        $preference = Preference::findOrFail($id);
+        $this->authorize('view', $preference);
 
-    return view('preference.edit', compact('preference', 'title'));
-  }
+        return view('preference.detail', compact('preference'));
+    }
 
-  public function detail($id) {
-    $preference = Preference::findOrFail($id);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Preference::class);
+        $preference = new Preference;
 
-    return view('preference.detail', compact('preference'));
-  }
+        $validatedData = $request->validate(['name' => 'required|string']);
 
-  // Actions
-  public function store(Request $request) {
-    $preference = new Preference();
+        $preference->name = $validatedData['name'];
+        $preference->save();
 
-    $validatedData = $request->validate(['name' => 'required|string']);
+        return back()->with('success', __('ui.created_success', ['item' => __('ui.preference')]));
+    }
 
-    $preference->name = $validatedData['name'];
-    $preference->save();
+    public function update(Request $request, $id)
+    {
+        $preference = Preference::findOrFail($id);
+        $this->authorize('update', $preference);
+        $validatedData = $request->validate(['name' => 'required|string']);
+        $preference->update($validatedData);
 
-    return back()->with('success', 'Preference created successfully.');
-  }
+        return back()->with('success', __('ui.updated_success', ['item' => __('ui.preference')]));
+    }
 
-  public function update(Request $request, $id) {
-    $preference = Preference::findOrFail($id);
-    $preference->update($request->all());
+    public function destroy($id)
+    {
+        $preference = Preference::findOrFail($id);
+        $this->authorize('delete', $preference);
+        $preference->delete();
 
-    return back()->with('success', 'Preference updated successfully.');
-  }
-
-  public function destroy($id) {
-    $preference = Preference::findOrFail($id);
-    $preference->delete();
-
-    return back()->with('success', 'Preference deleted successfully.');
-  }
+        return back()->with('success', __('ui.deleted_success', ['item' => __('ui.preference')]));
+    }
 }

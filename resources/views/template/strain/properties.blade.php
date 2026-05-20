@@ -7,7 +7,7 @@
     @include('template.alert', [
         'color' => 'secondary',
         'class' => 'text-center mb-0',
-        'content' => 'No property set',
+      'content' => __('ui.no_property_set'),
     ])
   @endif
 </div>

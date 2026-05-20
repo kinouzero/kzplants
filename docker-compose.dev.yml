@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env.dev
+    environment:
+      - AUTORUN_ENABLED=true
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
+      - RUN_STORAGE_LINK=${RUN_STORAGE_LINK:-true}
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/var/www/html

@@ -2,94 +2,174 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Notification;
 use App\Models\User;
+use Illuminate\Http\Request;
 
-class NotificationController extends Controller {
+class NotificationController extends Controller
+{
+    // Views
+    public function index()
+    {
+        $this->authorize('viewAny', Notification::class);
+        $notifications = Notification::all();
 
-  // Views
-  public function index() {
-    $notifications = Notification::all();
-
-    return view('notification.index', compact('notifications'));
-  }
-
-  public function create() {
-    $notification = null;
-    $users        = User::all();
-
-    $title = 'Create new notification';
-
-    $options   = [];
-    foreach ($users as $user) {
-      if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) continue;
-      $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
+        return view('notification.index', compact('notifications'));
     }
 
-    return view('notification.edit', compact('notification', 'options', 'title'));
-  }
+    public function create()
+    {
+        $this->authorize('create', Notification::class);
+        $notification = null;
+        $users = User::all();
 
-  public function edit($id) {
-    $notification = Notification::findOrFail($id);
-    $users        = User::all();
+        $title = __('ui.create_new', ['item' => __('ui.notification')]);
+        $config = [
+            'channels' => [],
+            'mail_subject' => '',
+            'ntfy_url' => '',
+            'ntfy_topic' => '',
+            'ntfy_priority' => '',
+            'ntfy_tags' => '',
+        ];
 
-    $title = sprintf('Edit notification: %s', $notification->name);
+        $options = [];
+        foreach ($users as $user) {
+            if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) {
+                continue;
+            }
+            $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
+        }
 
-    $options   = [];
-    foreach ($users as $user) {
-      if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) continue;
-      $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
+        return view('notification.edit', compact('notification', 'options', 'title', 'config'));
     }
 
-    return view('notification.edit', compact('notification', 'options', 'title'));
-  }
+    public function edit($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $this->authorize('update', $notification);
+        $users = User::all();
 
-  public function detail($id) {
-    $notification = Notification::findOrFail($id);
+        $title = __('ui.edit_item', ['item' => __('ui.notification'), 'name' => $notification->name]);
+        $config = array_merge([
+            'channels' => [],
+            'mail_subject' => '',
+            'ntfy_url' => '',
+            'ntfy_topic' => '',
+            'ntfy_priority' => '',
+            'ntfy_tags' => '',
+        ], $notification->config());
 
-    return view('notification.detail', compact('notification'));
-  }
+        $options = [];
+        foreach ($users as $user) {
+            if ($user->id === auth()->user()->id || $notification && $notification->creator()->id === $user->id) {
+                continue;
+            }
+            $options[] = view('template.form.select.option', ['value' => $user->id, 'title' => $user->name, 'selected' => false]);
+        }
 
-  // Actions
-  public function store(Request $request) {
-    $notification = new Notification();
+        return view('notification.edit', compact('notification', 'options', 'title', 'config'));
+    }
 
-    $validatedData = $request->validate([
-      'name'          => 'required|string',
-      'description'   => 'string'
-    ]);
+    public function detail($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $this->authorize('view', $notification);
 
-    $notification->name        = $validatedData['name'];
-    $notification->description = $validatedData['description'];
+        return view('notification.detail', compact('notification'));
+    }
 
-    // Configuration
-    $notification->configuration = json_encode([]);
+    // Actions
+    public function store(Request $request)
+    {
+        $this->authorize('create', Notification::class);
+        $notification = new Notification;
 
-    $notification->save();
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'channels' => 'array',
+            'channels.*' => 'in:mail,ntfy',
+            'mail_subject' => 'nullable|string',
+            'ntfy_url' => 'nullable|string',
+            'ntfy_topic' => 'nullable|string',
+            'ntfy_priority' => 'nullable|integer|min:1|max:5',
+            'ntfy_tags' => 'nullable|string',
+            'users' => 'array',
+            'users.*' => 'integer|exists:users,id',
+        ]);
 
-    return back()->with('success', 'Notification created successfully.');
-  }
+        $notification->name = $validatedData['name'];
+        $notification->description = $validatedData['description'];
 
-  public function update(Request $request, $id) {
-    $notification = Notification::findOrFail($id);
+        $notification->configuration = json_encode([
+            'channels' => $validatedData['channels'] ?? [],
+            'mail_subject' => $validatedData['mail_subject'] ?? null,
+            'ntfy_url' => $validatedData['ntfy_url'] ?? null,
+            'ntfy_topic' => $validatedData['ntfy_topic'] ?? null,
+            'ntfy_priority' => $validatedData['ntfy_priority'] ?? null,
+            'ntfy_tags' => $validatedData['ntfy_tags'] ?? null,
+        ]);
 
-    $args = $request->all();
+        $notification->save();
 
-    // Configuration
-    $configuration = json_encode([]);
-    unset($args['configuration']);
+        $userIds = $validatedData['users'] ?? [];
+        $sync = [auth()->id() => ['creator' => true, 'active' => true]];
+        foreach ($userIds as $userId) {
+            $sync[$userId] = ['creator' => false, 'active' => true];
+        }
+        $notification->users()->sync($sync);
 
-    $notification->update($args);
+        return back()->with('success', __('ui.created_success', ['item' => __('ui.notification')]));
+    }
 
-    return back()->with('success', 'Notification updated successfully.');
-  }
+    public function update(Request $request, $id)
+    {
+        $notification = Notification::findOrFail($id);
+        $this->authorize('update', $notification);
 
-  public function destroy($id) {
-    $notification = Notification::findOrFail($id);
-    $notification->delete();
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'channels' => 'array',
+            'channels.*' => 'in:mail,ntfy',
+            'mail_subject' => 'nullable|string',
+            'ntfy_url' => 'nullable|string',
+            'ntfy_topic' => 'nullable|string',
+            'ntfy_priority' => 'nullable|integer|min:1|max:5',
+            'ntfy_tags' => 'nullable|string',
+            'users' => 'array',
+            'users.*' => 'integer|exists:users,id',
+        ]);
+        $notification->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'] ?? null,
+            'configuration' => json_encode([
+                'channels' => $validatedData['channels'] ?? [],
+                'mail_subject' => $validatedData['mail_subject'] ?? null,
+                'ntfy_url' => $validatedData['ntfy_url'] ?? null,
+                'ntfy_topic' => $validatedData['ntfy_topic'] ?? null,
+                'ntfy_priority' => $validatedData['ntfy_priority'] ?? null,
+                'ntfy_tags' => $validatedData['ntfy_tags'] ?? null,
+            ]),
+        ]);
 
-    return back()->with('success', 'Notification deleted successfully.');
-  }
+        $userIds = $validatedData['users'] ?? [];
+        $sync = [auth()->id() => ['creator' => true, 'active' => true]];
+        foreach ($userIds as $userId) {
+            $sync[$userId] = ['creator' => false, 'active' => true];
+        }
+        $notification->users()->sync($sync);
+
+        return back()->with('success', __('ui.updated_success', ['item' => __('ui.notification')]));
+    }
+
+    public function destroy($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $this->authorize('delete', $notification);
+        $notification->delete();
+
+        return back()->with('success', __('ui.deleted_success', ['item' => __('ui.notification')]));
+    }
 }

@@ -18,14 +18,14 @@
 
       <div class="d-flex flex-nowrap comment-actions">
         <button type="submit" class="btn btn-outline-success flex-fill comment-save d-none me-2"
-          data-bs-toggle="tooltip" title="Save" data-bs-placement="bottom">
+          data-bs-toggle="tooltip" title="{{ __('ui.save') }}" data-bs-placement="bottom">
           <i class="far fa-save"></i>
         </button>
         <button type="button" class="btn btn-outline-secondary flex-fill comment-edit" data-bs-toggle="tooltip"
-          title="Edit" data-bs-placement="bottom">
+          title="{{ __('ui.edit') }}" data-bs-placement="bottom">
           <i class="fas fa-pencil-alt"></i>
         </button>
-        <a href="#" class="btn btn-outline-danger flex-fill ms-2 btn-form" data-bs-toggle="tooltip" title="Delete"
+        <a href="#" class="btn btn-outline-danger flex-fill ms-2 btn-form" data-bs-toggle="tooltip" title="{{ __('ui.delete') }}"
           data-bs-placement="bottom" data-form="#comment-remove-{{ $comment->id }}">
           <i class="far fa-trash-alt"></i>
         </a>

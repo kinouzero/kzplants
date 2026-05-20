@@ -5,7 +5,7 @@
       'type' => 'text',
       'id' => 'name',
       'name' => 'name',
-      'label' => 'Name',
+      'label' => __('ui.name'),
       'value' => $item ? $item->name : '',
       'class' => ['parent' => 'mb-3'],
       'extra' => ['input' => 'required autofocus'],
@@ -15,8 +15,8 @@
       'type' => 'select',
       'id' => 'checklist_id',
       'name' => 'checklist_id',
-      'label' => 'Checklist',
-      'placeholder' => 'Select checklist',
+      'label' => __('app.checklists'),
+      'placeholder' => __('ui.select_checklist'),
       'options' => implode('', $options_checklists),
       'class' => ['parent' => 'mb-3', 'input' => 'select2'],
       'extra' => ['input' => 'required autofocus'],
@@ -26,8 +26,8 @@
       'type' => 'select',
       'id' => 'parent_id',
       'name' => 'parent_id',
-      'label' => 'Parent',
-      'placeholder' => 'Select parent',
+      'label' => __('ui.parent'),
+      'placeholder' => __('ui.select_parent'),
       'options' => implode('', $options_parents),
       'class' => ['parent' => 'mb-3', 'input' => 'select2'],
       'extra' => null,
@@ -36,7 +36,7 @@
   <hr />
 
   <div class="d-flex">
-    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>Save</button>
+    <button class="btn btn-outline-success ms-auto" type="submit"><i class="far fa-save me-2"></i>{{ __('ui.save') }}</button>
   </div>
 
   <script>

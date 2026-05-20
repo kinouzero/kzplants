@@ -5,9 +5,9 @@
     <div class="card-body">
 
       <h1 class="d-flex text-center align-items-center">
-        <i class="fas fa-seedling fa-2xs me-2"></i>Strains
+        <i class="fas fa-seedling fa-2xs me-2"></i>{{ __('app.strains') }}
         <div class="ms-auto d-flex align-items-center">
-          <a class="btn btn-outline-secondary" href="{{ route('strain.create') }}" title="Create" data-bs-toggle="tooltip"
+          <a class="btn btn-outline-secondary" href="{{ route('strain.create') }}" title="{{ __('ui.create') }}" data-bs-toggle="tooltip"
             data-bs-placement="left"><i class="fas fa-plus"></i></a>
         </div>
       </h1>
@@ -17,10 +17,10 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getUserTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Tags</th>
-            <th>Properties</th>
-            <th class="text-end">Actions</th>
+            <th>{{ __('ui.name') }}</th>
+            <th>{{ __('app.tags') }}</th>
+            <th>{{ __('app.properties') }}</th>
+            <th class="text-end">{{ __('ui.actions') }}</th>
           </tr>
         </thead>
         @if ($strains)
@@ -29,18 +29,18 @@
               <tr>
                 <td>{{ $strain->name }}</td>
                 <td>
-                  {!! $strain->templateTags() !!}
+                  <x-strain-tags :strain="$strain" />
                 </td>
                 <td>
-                  {!! $strain->templateProperties() !!}
+                  <x-strain-properties :strain="$strain" />
                 </td>
                 <td class="text-end">
                   <div class="btn-group">
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.edit') }}"
                       href="{{ route('strain.edit', ['id' => $strain->id]) }}"><i class="fas fa-pencil-alt"></i></a>
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Pictures"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.pictures') }}"
                       href="{{ route('strain.pictures', ['id' => $strain->id]) }}"><i class="far fa-images"></i></a>
-                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
+                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="{{ __('ui.delete') }}" href="#"
                       data-form="#delete-strain-{{ $strain->id }}"><i class="far fa-trash-alt"></i></a>
                   </div>
                   <form id="delete-strain-{{ $strain->id }}"

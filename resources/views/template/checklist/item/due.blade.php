@@ -9,7 +9,7 @@
         'type' => 'datetime',
         'id' => 'due',
         'name' => 'due',
-        'label' => 'Due date',
+      'label' => __('ui.due_date'),
         'value' => $due,
         'class' => ['parent' => 'mb-2'],
         'extra' => null,

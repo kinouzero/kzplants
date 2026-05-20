@@ -1,7 +1,7 @@
 <div class="card h-100">
   <div class="card-body pb-0">
 
-    <h2 class="text-center"><i class="fab fa-pagelines fa-2xs me-2"></i>Status</h2>
+    <h2 class="text-center"><i class="fab fa-pagelines fa-2xs me-2"></i>{{ __('app.status') }}</h2>
 
     <hr />
 
@@ -9,12 +9,12 @@
       @include('template.alert', [
           'color' => 'secondary',
           'class' => 'text-center',
-          'content' => 'No plant yet',
+          'content' => __('ui.no_plant_yet'),
       ])
     @else
       <div style="card mb-3">
         <div class="card-body">
-          <canvas id="status" class="chart" data-url="{{ route('chart', ['type' => 'status']) }}" data-title="Status"
+          <canvas id="status" class="chart" data-url="{{ route('chart', ['type' => 'status']) }}" data-title="{{ __('app.status') }}"
             data-empty-color="#000"></canvas>
         </div>
       </div>
@@ -49,32 +49,51 @@
                   {{ $plant->statut->name }}
                 </span>
 
+                @php
+                  $due = App\Presenters\PlantPresenter::nextDue($plant);
+                @endphp
+                @if ($due)
+                  <span class="ms-2 small {{ $due->isPast() ? 'text-danger' : 'text-secondary' }}">
+                    <i class="far fa-clock me-1"></i>{{ $due->format('Y-m-d H:i') }}
+                  </span>
+                @endif
+
               </div>
 
               <div class="d-flex flex-nowrap align-items-center ms-auto">
                 <div class="d-flex flex-nowrap">
 
-                  @if ($plant->checklists->count() > 0)
+                  @if ($plant->stages->count() > 0)
                     <div class="text-secondary">
                       <i class="fas fa-info-circle" data-bs-toggle="popover" data-bs-placement="bottom"
-                        data-bs-trigger="hover" data-bs-content="{!! htmlentities($plant->templateDetails()) !!}"></i>
+                        data-bs-trigger="hover" data-bs-content="{!! htmlentities(App\Presenters\PlantPresenter::templateDetails($plant)) !!}"></i>
                     </div>
                   @endif
 
                   <div class="ms-3 text-secondary">
                     <i class="fas fa-tags" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="hover"
-                      data-bs-content="{!! htmlentities($plant->templateTags()) !!}"></i>
+                      data-bs-content="{!! htmlentities(App\Presenters\PlantPresenter::templateTags($plant)) !!}"></i>
                   </div>
 
                   <div class="ms-3 text-secondary">
                     <i class="fas fa-sitemap" data-bs-toggle="popover" data-bs-placement="bottom"
-                      data-bs-trigger="hover" data-bs-content="{!! htmlentities($plant->templateProperties()) !!}"></i>
+                      data-bs-trigger="hover" data-bs-content="{!! htmlentities(App\Presenters\PlantPresenter::templateProperties($plant)) !!}"></i>
                   </div>
 
                 </div>
 
               </div>
             </div>
+
+            @if ($plant->stages->count() > 0)
+              <div class="mt-3">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar" role="progressbar"
+                    style="width: {{ App\Presenters\PlantPresenter::checklistProgress($plant) }}%; background-color: {{ $plant->statut->color }};">
+                  </div>
+                </div>
+              </div>
+            @endif
 
           </div>
         </div>

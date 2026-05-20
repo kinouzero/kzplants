@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'login' => 'Connexion',
+    'logout' => 'Déconnexion',
+    'dashboard' => 'Tableau de bord',
+    'today' => "Aujourd'hui",
+    'manage' => 'Gérer',
+    'dashboards' => 'Tableaux de bord',
+    'plants' => 'Plantes',
+    'strains' => 'Variétés',
+    'notifications' => 'Notifications',
+    'admin' => 'Admin',
+    'status' => 'Statuts',
+    'tags' => 'Tags',
+    'properties' => 'Propriétés',
+    'checklists' => 'Checklists',
+    'stages' => 'Étapes',
+    'items' => 'Éléments',
+    'users' => 'Utilisateurs',
+    'preferences' => 'Préférences',
+    'switch_dashboard' => 'Changer de dashboard',
+    'toggle_theme' => 'Basculer en mode :mode',
+    'watering' => 'Arrosage',
+];

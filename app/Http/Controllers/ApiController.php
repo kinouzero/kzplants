@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-class ApiController extends Controller {
+class ApiController extends Controller
+{
+    public function notifications()
+    {
+        $notifications = ''; // @todo
 
-  public function notifications() {
-    $notifications = ''; // @todo
-    return response()->json($notifications);
-  }
+        return response()->json($notifications);
+    }
 
-  public function send() {
-    // @todo
-  }
+    public function send()
+    {
+        // @todo
+    }
 }

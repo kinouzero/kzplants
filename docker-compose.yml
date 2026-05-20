@@ -1,11 +1,12 @@
 version: '3.8'
 services:
   app:
-    build:
-      context: .
+    image: kinouzero/kzplants:latest
+    env_file:
+      - .env
     environment:
       - AUTORUN_ENABLED=true
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
+      - RUN_STORAGE_LINK=${RUN_STORAGE_LINK:-true}
     ports:
-      - 80:80
-    volumes:
-      - .:/var/www/html
+      - 8000:8000

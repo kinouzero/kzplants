@@ -5,9 +5,9 @@
     <div class="card-body">
 
       <h1 class="d-flex text-center align-items-center">
-        <i class="fas fa-check fa-2xs me-2"></i>Items
+        <i class="fas fa-check fa-2xs me-2"></i>{{ __('app.items') }}
         <div class="ms-auto d-flex align-items-center">
-          <a class="btn btn-outline-secondary" href="{{ route('item.create') }}" title="Create" data-bs-toggle="tooltip"
+          <a class="btn btn-outline-secondary" href="{{ route('item.create') }}" title="{{ __('ui.create') }}" data-bs-toggle="tooltip"
             data-bs-placement="left"><i class="fas fa-plus"></i></a>
         </div>
       </h1>
@@ -17,10 +17,10 @@
       <table class="datatable w-100" data-page-length={{ App\Models\User::getUserTableLength(auth()->user()) }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Checklist</th>
-            <th>Parent</th>
-            <th class="text-end">Actions</th>
+            <th>{{ __('ui.name') }}</th>
+            <th>{{ __('app.checklists') }}</th>
+            <th>{{ __('ui.parent') }}</th>
+            <th class="text-end">{{ __('ui.actions') }}</th>
           </tr>
         </thead>
         @if ($items)
@@ -32,9 +32,9 @@
                 <td>{{ $item->parent ? $item->parent->name : '' }}</td>
                 <td class="text-end">
                   <div class="btn-group">
-                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Edit"
+                    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('ui.edit') }}"
                       href="{{ route('item.edit', ['id' => $item->id]) }}"><i class="fas fa-pencil-alt"></i></a>
-                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="Delete" href="#"
+                    <a class="btn btn-outline-danger btn-form" data-bs-toggle="tooltip" title="{{ __('ui.delete') }}" href="#"
                       data-form="#delete-checklist-item-{{ $item->id }}"><i class="far fa-trash-alt"></i></a>
                   </div>
                   <form id="delete-checklist-item-{{ $item->id }}"

@@ -9,7 +9,7 @@
       @if (!$dashboard)
         <h1 class="text-center">
           <i class="fas fa-cannabis me-2 fa-rotate-by" style="--fa-rotate-angle: -25deg;"></i>
-          Welcome to kzPlants
+          {{ __('ui.welcome', ['app' => config('app.name', 'kzPlants')]) }}
         </h1>
 
         <hr />
@@ -35,7 +35,7 @@
                 </span>
                 <a href="{{ route('plant.create') }}" class="btn btn-outline-success mx-auto me-md-0">
                   <i class="fas fa-seedling me-2"></i>
-                  Add
+                  {{ __('ui.add') }}
                 </a>
               </div>
             </div>
@@ -50,7 +50,7 @@
                 </span>
                 <a href="{{ route('plant.create') }}" class="btn btn-outline-success mx-auto me-md-0">
                   <i class="fas fa-cannabis me-2"></i>
-                  Add
+                  {{ __('ui.add') }}
                 </a>
               </div>
             </div>

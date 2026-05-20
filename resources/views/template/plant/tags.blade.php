@@ -7,7 +7,7 @@
     @include('template.alert', [
         'color' => 'secondary',
         'class' => 'text-center mb-0',
-        'content' => 'No tag set',
+      'content' => __('ui.no_tag_set'),
     ])
   @endif
 </div>
