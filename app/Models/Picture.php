@@ -92,10 +92,6 @@ class Picture extends Model
 
     private static function resolveDisk(): string
     {
-        $hasS3 = env('AWS_ACCESS_KEY_ID')
-            && env('AWS_SECRET_ACCESS_KEY')
-            && env('AWS_BUCKET');
-
-        return $hasS3 ? 's3' : 'uploads';
+        return 's3';
     }
 }
