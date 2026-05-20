@@ -8,7 +8,8 @@ RUN composer install \
   --prefer-dist \
   --no-interaction \
   --no-progress \
-  --optimize-autoloader
+  --optimize-autoloader \
+  --no-scripts
 
 FROM node:20 AS assets
 WORKDIR /app
