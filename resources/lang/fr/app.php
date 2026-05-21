@@ -2,6 +2,10 @@
 
 return [
     'login' => 'Connexion',
+    'forgot_password' => 'Mot de passe oublié',
+    'send_reset_link' => 'Envoyer le lien',
+    'back_to_login' => 'Retour à la connexion',
+    'reset_password' => 'Réinitialiser le mot de passe',
     'logout' => 'Déconnexion',
     'dashboard' => 'Tableau de bord',
     'today' => "Aujourd'hui",

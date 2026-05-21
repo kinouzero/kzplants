@@ -66,6 +66,7 @@ return [
     'no_tag_set' => 'Aucun tag défini',
     'no_property_set' => 'Aucune propriété définie',
     'email' => 'Email',
+    'email_or_login' => 'Email ou identifiant',
     'password' => 'Mot de passe',
     'pictures_uploaded' => 'Photos envoyées avec succès.',
     'watering_without_chemical' => 'Arrosage sans engrais effectué avec succès.',

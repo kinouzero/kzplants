@@ -66,6 +66,7 @@ return [
     'no_tag_set' => 'No tag set',
     'no_property_set' => 'No property set',
     'email' => 'Email',
+    'email_or_login' => 'Email or username',
     'password' => 'Password',
     'pictures_uploaded' => 'Pictures uploaded successfully.',
     'watering_without_chemical' => 'Watering without chemical done successfully.',

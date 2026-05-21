@@ -101,6 +101,8 @@ return [
         ],
     ],
 
+    'password_reset_throttle' => env('AUTH_PASSWORD_RESET_THROTTLE', '5,1'),
+
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout

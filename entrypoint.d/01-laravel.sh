@@ -1,12 +1,11 @@
 #!/bin/sh
 set -e
 
-if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
-  php artisan migrate --force
-fi
-
 if [ "${RUN_DB_RESET:-false}" = "true" ]; then
   php artisan migrate:fresh --force
+  php artisan db:seed --force
+elif [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+  php artisan migrate --force
 fi
 
 if [ "${RUN_PACKAGE_DISCOVER:-true}" = "true" ]; then

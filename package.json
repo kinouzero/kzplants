@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "assets:copy": "rm -rf public/npm && mkdir -p public/npm && cp -R node_modules/jquery public/npm/ && cp -R node_modules/bootstrap public/npm/ && cp -R node_modules/bootstrap-fileinput public/npm/ && cp -R node_modules/datatables.net public/npm/ && cp -R node_modules/datatables.net-bs5 public/npm/ && cp -R node_modules/datatables.net-responsive public/npm/ && cp -R node_modules/datatables.net-responsive-bs5 public/npm/ && cp -R node_modules/lightbox2 public/npm/ && cp -R node_modules/select2 public/npm/ && cp -R node_modules/masonry-layout public/npm/ && cp -R node_modules/@fortawesome public/npm/",
+    "postinstall": "npm run assets:copy"
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.8",

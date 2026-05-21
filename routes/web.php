@@ -20,10 +20,18 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+$passwordResetThrottle = config('auth.password_reset_throttle', '5,1');
+
 // Login
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
+
+// Forgot password
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email')->middleware('throttle:'.$passwordResetThrottle);
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update')->middleware('throttle:'.$passwordResetThrottle);
 
 // Logout
 Route::get('/logout', function () {

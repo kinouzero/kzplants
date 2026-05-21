@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -16,9 +19,38 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        if (auth()->attempt($request->only('email', 'password'))) {
+        $login = trim((string) $request->input('email'));
+
+        Log::info('Auth login attempt', [
+            'login' => $login,
+            'ip' => $request->ip(),
+            'host' => $request->getHost(),
+            'scheme' => $request->getScheme(),
+            'secure' => $request->isSecure(),
+            'has_session' => $request->hasSession(),
+            'session_id' => $request->session()->getId(),
+            'session_cookie' => $request->cookies->has(config('session.cookie')),
+            'user_agent' => (string) $request->userAgent(),
+        ]);
+
+        $password = (string) $request->input('password');
+        $attempted = auth()->attempt(['email' => $login, 'password' => $password]);
+        if (! $attempted) {
+            $attempted = auth()->attempt(['name' => $login, 'password' => $password]);
+        }
+
+        if ($attempted) {
+            Log::info('Auth login success', [
+                'user_id' => auth()->id(),
+                'session_id' => $request->session()->getId(),
+            ]);
             return redirect()->intended('/');
         }
+
+        Log::warning('Auth login failed', [
+            'login' => $login,
+            'session_id' => $request->session()->getId(),
+        ]);
 
         return redirect()->back()->withInput()->withErrors(['email' => 'Email ou mot de passe incorrect.']);
     }
@@ -28,9 +60,73 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        Log::info('Auth logout', [
+            'user_id' => auth()->id(),
+        ]);
         auth()->logout();
 
         return redirect('/');
+    }
+
+    /**
+     * Forgot password form
+     */
+    public function showForgotForm()
+    {
+        return view('auth.forgot-password');
+    }
+
+    /**
+     * Send reset link
+     */
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('status', __($status))
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    /**
+     * Reset password form
+     */
+    public function showResetForm(Request $request, string $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => (string) $request->query('email'),
+        ]);
+    }
+
+    /**
+     * Reset password
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => __($status)]);
     }
 
     /**
@@ -129,6 +225,8 @@ class AuthController extends Controller
 
         $name = data_get($claims, $nameClaim) ?: ($claims['preferred_username'] ?? $email);
 
+        $isFirstUser = User::count() === 0;
+
         $user = User::firstOrCreate(
             ['email' => $email],
             [
@@ -137,6 +235,13 @@ class AuthController extends Controller
                 'email_verified_at' => now(),
             ]
         );
+
+        if ($isFirstUser) {
+            $adminRole = Role::firstOrCreate(['name' => 'admin'], ['description' => 'Administrator']);
+            if (! $user->roles()->where('role_id', $adminRole->id)->exists()) {
+                $user->roles()->attach($adminRole->id);
+            }
+        }
 
         $adminGroup = config('oidc.admin_group');
         if ($adminGroup) {

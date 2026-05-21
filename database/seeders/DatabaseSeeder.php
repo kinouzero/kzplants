@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PreferenceSeeder::class,
             PropertySeeder::class,
             ChecklistSeeder::class,
+            UserSeeder::class,
         ]);
 
         if (env('SEED_DEMO', false)) {

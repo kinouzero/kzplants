@@ -12,10 +12,10 @@
         @csrf
 
         @include('template.form.floating', [
-            'type' => 'email',
+            'type' => 'text',
             'id' => 'email',
             'name' => 'email',
-          'label' => __('ui.email'),
+            'label' => __('ui.email_or_login'),
             'value' => '',
             'class' => ['parent' => 'mb-3'],
             'extra' => ['input' => 'required autofocus'],
@@ -37,6 +37,12 @@
           <button class="btn btn-outline-success ms-auto" type="submit">{{ __('app.login') }}</button>
         </div>
       </form>
+
+      <hr />
+
+      <div class="d-grid">
+        <a class="btn btn-outline-secondary" href="{{ route('password.request') }}">{{ __('app.forgot_password') }}</a>
+      </div>
 
       @if (config('oidc.enabled'))
         <hr />

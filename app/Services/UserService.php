@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,6 +11,8 @@ class UserService
 {
     public function create(array $data): User
     {
+        $isFirstUser = User::count() === 0;
+
         $user = new User;
         $user->fill(Arr::only($data, ['name', 'email']));
 
@@ -20,6 +23,13 @@ class UserService
         $user->save();
 
         $this->syncRelations($user, $data);
+
+        if ($isFirstUser) {
+            $adminRole = Role::firstOrCreate(['name' => 'admin'], ['description' => 'Administrator']);
+            if (! $user->roles()->where('role_id', $adminRole->id)->exists()) {
+                $user->roles()->attach($adminRole->id);
+            }
+        }
 
         return $user;
     }

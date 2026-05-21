@@ -2,6 +2,10 @@
 
 return [
     'login' => 'Login',
+    'forgot_password' => 'Forgot password',
+    'send_reset_link' => 'Send reset link',
+    'back_to_login' => 'Back to login',
+    'reset_password' => 'Reset password',
     'logout' => 'Logout',
     'dashboard' => 'Dashboard',
     'today' => 'Today',
