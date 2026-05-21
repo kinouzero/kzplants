@@ -92,6 +92,10 @@ class Picture extends Model
 
     private static function resolveDisk(): string
     {
+        if (app()->environment('testing')) {
+            return 'local';
+        }
+
         return 's3';
     }
 }
